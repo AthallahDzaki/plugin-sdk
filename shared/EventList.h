@@ -5,7 +5,7 @@
     Do not delete this comment block. Respect others' work!
 */
 #pragma once
-#include "../injector/hooking.hpp"
+#include <injector/hooking.hpp>
 #include "ArgPicker.h"
 #include "RefList.h"
 #include "GameVersion.h"

@@ -21,6 +21,7 @@ public:
     CRGBA(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
     CRGBA(unsigned int intValue);
     CRGBA(RwRGBA const &rhs);
+    CRGBA(CRGBA const &rhs) = default;
     CRGBA();
 
     void Set(unsigned char red, unsigned char green, unsigned char blue);

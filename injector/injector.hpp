@@ -138,7 +138,8 @@ union basic_memory_pointer
         // This type can get assigned from void* and uintptr_t
         basic_memory_pointer& operator=(void* x)		{ return p = x, *this; }
         basic_memory_pointer& operator=(uintptr_t x)	{ return a = x, *this; }
-        
+        basic_memory_pointer& operator=(const basic_memory_pointer &rhs) = default;
+
         /* Arithmetic */
         basic_memory_pointer operator+(const basic_memory_pointer& rhs) const
         { return basic_memory_pointer(this->a + rhs.a); }
@@ -464,9 +465,9 @@ inline void MakeRelativeOffset(memory_pointer_tr at, memory_pointer_tr dest, siz
 {
     switch(sizeof_addr)
     {
-        case 1: WriteMemory<int8_t> (at, static_cast<int8_t> (GetRelativeOffset(dest, at+sizeof_addr)), vp);
-        case 2: WriteMemory<int16_t>(at, static_cast<int16_t>(GetRelativeOffset(dest, at+sizeof_addr)), vp);
-        case 4: WriteMemory<int32_t>(at, static_cast<int32_t>(GetRelativeOffset(dest, at+sizeof_addr)), vp);
+        case 1: WriteMemory<int8_t> (at, static_cast<int8_t> (GetRelativeOffset(dest, at+sizeof_addr)), vp); break;
+        case 2: WriteMemory<int16_t>(at, static_cast<int16_t>(GetRelativeOffset(dest, at+sizeof_addr)), vp); break;
+        case 4: WriteMemory<int32_t>(at, static_cast<int32_t>(GetRelativeOffset(dest, at+sizeof_addr)), vp); break;
     }
 }
 

@@ -17,8 +17,8 @@ public:
 	float field_C;
 
 	void SetGamma(float arg1, char arg2);
+
+	static PLUGIN_API CGamma &gamma;
 };
 
 VALIDATE_SIZE(CGamma, 0x10);
-
-extern PLUGIN_API CGamma &gamma;

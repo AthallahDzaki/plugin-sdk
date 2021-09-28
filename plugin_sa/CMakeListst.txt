@@ -12,6 +12,7 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC GTASA)
 
+target_include_directories(${PROJECT_NAME} PUBLIC "../")
 target_include_directories(${PROJECT_NAME} PUBLIC "./")
 target_include_directories(${PROJECT_NAME} PUBLIC "./game_sa/")
 target_include_directories(${PROJECT_NAME} PUBLIC "../shared/")

@@ -12,6 +12,7 @@ endif()
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC GTAVC)
 
+target_include_directories(${PROJECT_NAME} PUBLIC "../")
 target_include_directories(${PROJECT_NAME} PUBLIC "./")
 target_include_directories(${PROJECT_NAME} PUBLIC "./game_vc/")
 target_include_directories(${PROJECT_NAME} PUBLIC "../shared/")

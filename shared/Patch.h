@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../injector/injector.hpp"
+#include <injector/injector.hpp>
 #include "DynAddress.h"
 
 namespace plugin {
