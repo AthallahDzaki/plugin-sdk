@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.23)
 project(plugin-sdk)
 
 set (CMAKE_CXX_STANDARD 17)
