@@ -16,13 +16,13 @@ class CVehicleToEffect;
 
 class PLUGIN_API CPedAttractorManager {
 public:
-    std::vector<CPedAttractor *> vAtmAttractors;
-    std::vector<CPedAttractor *> vSeatAttractors;
-    std::vector<CPedAttractor *> vStopAttractors;
-    std::vector<CPedAttractor *> vPizzaAttractors;
-    std::vector<CPedAttractor *> vShelterAttractors;
-    std::vector<CPedAttractor *> vIceCreamAttractors;
-    std::vector<CVehicleToEffect> vVehicleToEffect;
+    PedAttractorArray<CPedAttractor *> vAtmAttractors;
+    PedAttractorArray<CPedAttractor *> vSeatAttractors;
+    PedAttractorArray<CPedAttractor *> vStopAttractors;
+    PedAttractorArray<CPedAttractor *> vPizzaAttractors;
+    PedAttractorArray<CPedAttractor *> vShelterAttractors;
+    PedAttractorArray<CPedAttractor *> vIceCreamAttractors;
+    PedAttractorArray<CVehicleToEffect> vVehicleToEffect;
 
     SUPPORTED_10EN_11EN_STEAM bool BroadcastArrival(CPed *ped, CPedAttractor *attr);
     SUPPORTED_10EN_11EN_STEAM bool BroadcastDeparture(CPed *ped, CPedAttractor *attr);
