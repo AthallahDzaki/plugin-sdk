@@ -507,7 +507,7 @@ public:
     SUPPORTED_10EN_11EN_STEAM bool SetupLighting();
     SUPPORTED_10EN_11EN_STEAM void RemoveLighting(bool resetWorldColors);
     SUPPORTED_10EN_11EN_STEAM void FlagToDestroyWhenNextProcessed();
-    SUPPORTED_10EN_11EN_STEAM void ProcessEntityCollision(CEntity *entity, CColPoint *colPoint);
+    SUPPORTED_10EN_11EN_STEAM int ProcessEntityCollision(CEntity *entity, CColPoint *colPoint);
     SUPPORTED_10EN_11EN_STEAM void SetMoveAnim();
 
     SUPPORTED_10EN_11EN_STEAM void AddWeaponModel(int modelIndex);
@@ -724,6 +724,7 @@ public:
     SUPPORTED_10EN_11EN_STEAM bool WarpPedToNearLeaderOffScreen();
     SUPPORTED_10EN_11EN_STEAM bool WillChat(CPed *stranger);
     SUPPORTED_10EN_11EN_STEAM float WorkOutHeadingForMovingFirstPerson(float offset);
+    bool IsPedDoingDriveByShooting();
 
     SUPPORTED_10EN_11EN_STEAM static void FinishDieAnimCB(CAnimBlendAssociation *association, void *data);
     SUPPORTED_10EN_11EN_STEAM static void FinishFightMoveCB(CAnimBlendAssociation *association, void *data);

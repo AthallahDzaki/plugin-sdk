@@ -50,7 +50,7 @@ public:
     SUPPORTED_10EN_11EN_STEAM static void RemoveColModelsFromOtherLevels(eLevelName level);
     SUPPORTED_10EN_11EN_STEAM static void ShutDown();
 
-    static inline CBaseModelInfo *GetModelsInfo(int index) {
+    static inline CBaseModelInfo *GetModelInfo(int index) {
         return ms_modelInfoPtrs[index];
     }
 
@@ -72,6 +72,10 @@ public:
 
     static inline bool IsPlaneModel(int index) {
         return (ms_modelInfoPtrs[index] && ms_modelInfoPtrs[index]->m_nType == MODEL_INFO_VEHICLE && reinterpret_cast<CVehicleModelInfo *>(ms_modelInfoPtrs[index])->m_nVehicleType == VEHICLE_PLANE);
+    }
+
+    static inline bool IsBikeModel(int index) {
+        return (ms_modelInfoPtrs[index] && ms_modelInfoPtrs[index]->m_nType == MODEL_INFO_VEHICLE && reinterpret_cast<CVehicleModelInfo*>(ms_modelInfoPtrs[index])->m_nVehicleType == VEHICLE_BIKE);
     }
 
     // return -1 if model is not a vehicle model otherwise returns vehicle model type
