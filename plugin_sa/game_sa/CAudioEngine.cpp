@@ -58,6 +58,10 @@ void CAudioEngine::ServiceLoadingTune(float fade) {
     plugin::CallMethod<0x5078A0, CAudioEngine*, float>(this, fade);
 }
 
+void CAudioEngine::StartRadio(int radioStation, char arg) {
+    plugin::CallMethod<0x507DC0, CAudioEngine*, int, char>(this, radioStation, arg);
+}
+
 void CAudioEngine::StopRadio(tVehicleAudioSettings* settings, bool arg) {
     plugin::CallMethod<0x506F70, CAudioEngine*, tVehicleAudioSettings*, bool>(this, settings, arg);
 }
@@ -92,4 +96,12 @@ bool CAudioEngine::IsVehicleRadioActive() {
 
 void CAudioEngine::InitialisePostLoading() {
     plugin::CallMethod<0x5078F0, CAudioEngine*>(this);
+}
+
+void CAudioEngine::SetMusicFaderScalingFactor(float value) {
+    plugin::CallMethod<0x506E40, CAudioEngine*, float>(this, value);
+}
+
+void CAudioEngine::SetEffectsFaderScalingFactor(float value) {
+    plugin::CallMethod<0x506E50, CAudioEngine*, float>(this, value);
 }

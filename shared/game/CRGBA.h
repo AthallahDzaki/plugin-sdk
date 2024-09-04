@@ -8,8 +8,14 @@
 
 #include "PluginBase.h"
 
+#ifdef RW
 struct RwRGBA;
+#endif
 
+#ifdef RAGE
+#include "Rage.h"
+using CRGBA = rage::Color32;
+#else
 class CRGBA {
 public:
     unsigned char r;
@@ -20,8 +26,10 @@ public:
     CRGBA(unsigned char red, unsigned char green, unsigned char blue);
     CRGBA(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
     CRGBA(unsigned int intValue);
+
+#ifdef RW
     CRGBA(RwRGBA const &rhs);
-    CRGBA(CRGBA const &rhs) = default;
+#endif
     CRGBA();
 
     void Set(unsigned char red, unsigned char green, unsigned char blue);
@@ -29,14 +37,20 @@ public:
     void Set(unsigned int intValue);
     void Set(CRGBA const &rhs);
     void Set(CRGBA const &rhs, unsigned char alpha);
+
+#ifdef RW
     void Set(RwRGBA const &rwcolor);
+#endif
 
     CRGBA ToRGB() const;
     unsigned int ToInt() const;
     unsigned int ToIntARGB() const;
+
+#ifdef RW
     RwRGBA ToRwRGBA() const;
 
     void FromRwRGBA(RwRGBA const &rwcolor);
+#endif
     void FromARGB(unsigned int intValue);
 
     void Invert();
@@ -45,3 +59,4 @@ public:
     bool operator==(CRGBA const &rhs) const;
     CRGBA &operator=(CRGBA const &rhs);
 };
+#endif
