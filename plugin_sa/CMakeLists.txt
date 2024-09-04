@@ -10,7 +10,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(${PROJECT_NAME} PUBLIC -fpermissive)
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC GTASA)
+target_compile_definitions(${PROJECT_NAME} PUBLIC GTASA RW)
 
 target_include_directories(${PROJECT_NAME} PUBLIC "../")
 target_include_directories(${PROJECT_NAME} PUBLIC "./")
