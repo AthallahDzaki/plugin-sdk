@@ -6,10 +6,9 @@
 */
 #pragma once
 #include "PluginBase.h"
-#include "CRect.h"
 
 class CWaterLevel {
 public:
     static void AllocateBoatWakeArray();
-    static void RenderWater();
+
 };

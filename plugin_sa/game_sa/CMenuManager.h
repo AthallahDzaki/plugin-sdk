@@ -193,7 +193,6 @@ struct PLUGIN_API CMenuScreen {
     } m_aEntries[NUM_ENTRIES];
 };
 
-#pragma pack(push,1)
 class PLUGIN_API CMenuManager {
 public:
     char m_nStatsScrollDir;
@@ -299,15 +298,13 @@ public:
     bool m_bTexturesLoaded;
     char m_nCurrentMenuPage;
     char m_nPreviousMenuPage;
-    char m_nSelectedSaveGame;
-
-    char m_nSelectedMissionPack;
+    char m_nCurrentSelectedMissionPack;
     struct MissionPackStruct {
         uint8_t id;
         char name[260];
     };
-    MissionPackStruct m_MissionPacks[25];
 
+    MissionPackStruct m_nSelectedMissionPack[25];
     bool m_bChangeVideoMode;
     char field_1ADF;
     int field_1AE0;
@@ -447,7 +444,7 @@ public:
     void RequestFrontEndShutDown();
     void RequestFrontEndStartUp();
 };
-#pragma pack(pop)
+
 VALIDATE_SIZE(CMenuManager, 0x1B78);
 
 extern CMenuManager &FrontEndMenuManager;

@@ -973,11 +973,6 @@ RwTexture* RwTextureSetRaster(RwTexture* texture, RwRaster* raster) {
     return ((RwTexture*(__cdecl *)(RwTexture*, RwRaster*))0x7F35D0)(texture, raster);
 }
 
-RwTexture *RwTextureRead(const char *name, char *Maskname)
-{
-    return ((RwTexture * (__cdecl *)(char const *, char const *))0x4C7510)(name, Maskname);
-}
-
 RwTexture* RwTexDictionaryAddTexture(RwTexDictionary* dict, RwTexture* texture) {
     return ((RwTexture*(__cdecl *)(RwTexDictionary*, RwTexture*))0x7F3980)(dict, texture);
 }
@@ -1268,10 +1263,6 @@ RwBool RwD3D9CreatePixelShader(const RwUInt32* function, void** shader) {
 
 void RwD3D9DeletePixelShader(void) {
     ((void(__cdecl *)(void))0x7FACF0)();
-}
-
-void _rwD3D9SetStreams(const RxD3D9VertexStream* streams, RwBool useOffsets) {
-    return plugin::CallDyn(0x7FA090, streams, useOffsets);
 }
 
 const void* RwD3D9GetCaps(void) {
@@ -3440,6 +3431,9 @@ RxPipeline* RpMatFXGetD3D9Pipeline(RpMatFXD3D9Pipeline d3d9Pipeline) {
 
 /* skeleton.h */
 
+RsEventStatus RsEventHandler(RsEvent e, void* param) {
+    return plugin::CallAndReturn<RsEventStatus, 0x619B60, RsEvent, void*>(e, param);
+}
 
 /* rpanisot.h */
 

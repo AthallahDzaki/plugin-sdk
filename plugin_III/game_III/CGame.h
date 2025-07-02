@@ -7,7 +7,6 @@
 #pragma once
 
 #include "PluginBase.h"
-#include "RenderWare.h"
 
 class PLUGIN_API CGame {
 public:
@@ -47,7 +46,5 @@ SUPPORTED_10EN_11EN_STEAM void ValidateVersion();
 extern bool DoRwStuffStartOfFrame(short topRed, short topGreen, short topBlue, short bottomRed, short bottomGreen, short bottomBlue, short alpha);
 extern void DoRwStuffEndOfFrame();
 extern class CSprite2d* LoadSplash(const char* name);
-
-extern RsEventStatus RsEventHandler(RsEvent event, void* param);
 
 #include "meta/meta.CGame.h"

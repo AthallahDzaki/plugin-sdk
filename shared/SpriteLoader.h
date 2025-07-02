@@ -37,8 +37,6 @@ namespace plugin {
         bool mipMap;
         std::string extension;
 
-        int32_t memUsed;
-
     public:
         inline SpriteLoader() {
 #ifdef RW
@@ -49,23 +47,19 @@ namespace plugin {
             slotName = {};
             istxd = false;
             mipMap = false;
-#ifdef RAGE
-            extension = "dds";
-#else
             extension = "png";
-#endif
-            memUsed = 0;
         }
         void Clear();
         bool LoadAllSpritesFromTxd(std::string const& path);
-        texClass* LoadSpriteFromFolder(std::string const& file);
+#ifdef RW
+        RwTexture* LoadSpriteFromFolder(std::string const& file);
         bool LoadAllSpritesFromFolder(std::string const& path);
+#endif
         CSprite2d GetSprite(std::string const& name);
         CSprite2d GetSprite(uint32_t id);
         texClass* GetTex(std::string const& name);
         void SetMipMapOn(bool on);
         void SetExtension(std::string ext);
-        uint32_t GetMemoryUsed();
     };
 }
 #endif

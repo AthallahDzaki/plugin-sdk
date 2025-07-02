@@ -6,7 +6,6 @@
 */
 #pragma once
 #include "PluginBase.h"
-#include "grcTexture.h"
 
 namespace rage {
     enum grcRenderTargetType : int32_t {
@@ -22,17 +21,9 @@ namespace rage {
         grcrtCount = 0x8,
     };
 
-    class grcRenderTarget : public grcTexture {
+    class grcRenderTarget {
     public:
-        virtual ~grcRenderTarget() {
-            plugin::CallVirtualMethod<0>(this, 0);
-        }
-    };
 
-    class grcRenderTargetPC : public grcRenderTarget {
-    public:
-        grcTexturePC* GetTexture() {
-            return (grcTexturePC*)this;
-        }
+
     };
 }
