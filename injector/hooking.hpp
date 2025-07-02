@@ -31,8 +31,6 @@
 #include <list>
 #include "../shared/DynAddress.h"
 
-#pragma warning(disable: 26439) // nothrow tip
-
 namespace injector
 {
     /*
@@ -55,13 +53,16 @@ namespace injector
     class scoped_basic : public scoped_base
     {
         private:
-            uint8_t            buf[bufsize] = { 0 }; // Saved content
-            memory_pointer_raw addr = nullptr; // Data saved from this address
-            size_t             size = 0; // Size saved
-            bool               saved = false; // Something saved?
-            bool               vp = false; // Virtual protect?
+            uint8_t            buf[bufsize];// Saved content
+            memory_pointer_raw addr;        // Data saved from this address
+            size_t             size;        // Size saved
+            bool               saved;       // Something saved?
+            bool               vp;          // Virtual protect?
 
         public:
+
+            static const bool  is_dynamic = false;
+
             // Restore the previosly saved data
             // Problems may arise if someone else hooked the same place using the same method
             virtual void restore()
@@ -89,7 +90,10 @@ namespace injector
                 #endif
             }
 
-            scoped_basic() = default;
+        public:
+            // Constructor, initialises
+            scoped_basic() : saved(false)
+            {}
 
             ~scoped_basic()
             {
@@ -739,5 +743,3 @@ namespace injector
 #endif
 
 }
-
-#pragma warning(default: 26439)

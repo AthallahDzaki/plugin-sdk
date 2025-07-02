@@ -296,19 +296,10 @@ struct scoped_unprotect
     DWORD               dwOldProtect;
     bool                bUnprotected;
 
-    scoped_unprotect(memory_pointer_tr addr, size_t size) :
-        addr(addr.get<void>()),
-        size(size)
+    scoped_unprotect(memory_pointer_tr addr, size_t size)
     {
-        if(size == 0)
-        {
-            bUnprotected = false;
-            dwOldProtect = 0;
-        }
-        else
-        {
-            bUnprotected = UnprotectMemory(addr, size, dwOldProtect);
-        }
+        if(size == 0) bUnprotected = false;
+        else          bUnprotected = UnprotectMemory(this->addr = addr.get<void>(), this->size = size, dwOldProtect);
     }
     
     ~scoped_unprotect()

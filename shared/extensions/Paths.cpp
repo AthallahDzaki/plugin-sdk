@@ -31,7 +31,7 @@ struct PluginPathA {
         char *fslp = strrchr(_path, '/');
         char *slp = MAX_VALUE(bslp, fslp);
         if (slp) {
-            strcpy_s(_filename, slp + 1);
+            strcpy(_filename, slp + 1);
             slp[1] = '\0';
         }
     }
@@ -77,7 +77,7 @@ struct PluginPathW {
         wchar_t *fslp = wcsrchr(_path, '/');
         wchar_t *slp = MAX_VALUE(bslp, fslp);
         if (slp) {
-            wcscpy_s(_filename, slp + 1);
+            wcscpy(_filename, slp + 1);
             slp[1] = '\0';
         }
     }
@@ -125,121 +125,119 @@ GamePathW &GamePathWInstance() {
 }
 
 void plugin::paths::GetGameDirPathA(char *out) {
-    strcpy_s(out, MAX_PATH, GamePathAInstance()._path);
+    strcpy(out, GamePathAInstance()._path);
 }
 
-const char *plugin::paths::GetGameDirPathA() {
-    strcpy_s(GamePathAInstance()._temp_path, GamePathAInstance()._path);
+char *plugin::paths::GetGameDirPathA() {
+    strcpy(GamePathAInstance()._temp_path, GamePathAInstance()._path);
     return GamePathAInstance()._temp_path;
 }
 
 void plugin::paths::GetPluginDirPathA(char *out) {
-    strcpy_s(out, MAX_PATH, PluginPathAInstance()._path);
+    strcpy(out, PluginPathAInstance()._path);
 }
 
-const char *plugin::paths::GetPluginDirPathA() {
-    strcpy_s(PluginPathAInstance()._temp_path, PluginPathAInstance()._path);
+char *plugin::paths::GetPluginDirPathA() {
+    strcpy(PluginPathAInstance()._temp_path, PluginPathAInstance()._path);
     return PluginPathAInstance()._temp_path;
 }
 
 void plugin::paths::GetGameDirPathW(wchar_t *out) {
-    wcscpy_s(out, MAX_PATH, GamePathWInstance()._path);
+    wcscpy(out, GamePathWInstance()._path);
 }
 
-const wchar_t *plugin::paths::GetGameDirPathW() {
-    wcscpy_s(GamePathWInstance()._temp_path, GamePathWInstance()._path);
+wchar_t *plugin::paths::GetGameDirPathW() {
+    wcscpy(GamePathWInstance()._temp_path, GamePathWInstance()._path);
     return GamePathWInstance()._temp_path;
 }
 
 void plugin::paths::GetPluginDirPathW(wchar_t *out) {
-    wcscpy_s(out, MAX_PATH, PluginPathWInstance()._path);
+    wcscpy(out, PluginPathWInstance()._path);
 }
 
-const wchar_t *plugin::paths::GetPluginDirPathW() {
-    wcscpy_s(PluginPathWInstance()._temp_path, PluginPathWInstance()._path);
+wchar_t *plugin::paths::GetPluginDirPathW() {
+    wcscpy(PluginPathWInstance()._temp_path, PluginPathWInstance()._path);
     return PluginPathWInstance()._temp_path;
 }
 
-void plugin::paths::GetGameDirRelativePathA(char *out, const char *subpath) {
-    strcpy_s(out, MAX_PATH, GamePathAInstance()._path);
-    strcat_s(out, MAX_PATH, subpath);
+void plugin::paths::GetGameDirRelativePathA(char *out, char *subpath) {
+    strcpy(out, GamePathAInstance()._path);
+    strcat(out, subpath);
 }
 
-const char *plugin::paths::GetGameDirRelativePathA(const char *subpath) {
-    strcpy_s(GamePathAInstance()._temp_path, GamePathAInstance()._path);
-    strcat_s(GamePathAInstance()._temp_path, subpath);
+char *plugin::paths::GetGameDirRelativePathA(char *subpath) {
+    strcpy(GamePathAInstance()._temp_path, GamePathAInstance()._path);
+    strcat(GamePathAInstance()._temp_path, subpath);
     return GamePathAInstance()._temp_path;
 }
 
-void plugin::paths::GetPluginDirRelativePathA(char *out, const char *subpath) {
-    strcpy_s(out, MAX_PATH, PluginPathAInstance()._path);
-    strcat_s(out, MAX_PATH, subpath);
+void plugin::paths::GetPluginDirRelativePathA(char *out, char *subpath) {
+    strcpy(out, PluginPathAInstance()._path);
+    strcat(out, subpath);
 }
 
-const char *plugin::paths::GetPluginDirRelativePathA(const char *subpath) {
-    strcpy_s(PluginPathAInstance()._temp_path, PluginPathAInstance()._path);
-    strcat_s(PluginPathAInstance()._temp_path, subpath);
+char *plugin::paths::GetPluginDirRelativePathA(char *subpath) {
+    strcpy(PluginPathAInstance()._temp_path, PluginPathAInstance()._path);
+    strcat(PluginPathAInstance()._temp_path, subpath);
     return PluginPathAInstance()._temp_path;
 }
 
 
-void plugin::paths::GetGameDirRelativePathW(wchar_t *out, const wchar_t *subpath) {
-    wcscpy_s(out, MAX_PATH, GamePathWInstance()._path);
-    wcscat_s(out, MAX_PATH, subpath);
+void plugin::paths::GetGameDirRelativePathW(wchar_t *out, wchar_t *subpath) {
+    wcscpy(out, GamePathWInstance()._path);
+    wcscat(out, subpath);
 }
 
-const wchar_t *plugin::paths::GetGameDirRelativePathW(const wchar_t *subpath) {
-    wcscpy_s(GamePathWInstance()._temp_path, GamePathWInstance()._path);
-    wcscat_s(GamePathWInstance()._temp_path, subpath);
+wchar_t *plugin::paths::GetGameDirRelativePathW(wchar_t *subpath) {
+    wcscpy(GamePathWInstance()._temp_path, GamePathWInstance()._path);
+    wcscat(GamePathWInstance()._temp_path, subpath);
     return GamePathWInstance()._temp_path;
 }
 
-void plugin::paths::GetPluginDirRelativePathW(wchar_t *out, const wchar_t *subpath) {
-    wcscpy_s(out, MAX_PATH, PluginPathWInstance()._path);
-    wcscat_s(out, MAX_PATH, subpath);
+void plugin::paths::GetPluginDirRelativePathW(wchar_t *out, wchar_t *subpath) {
+    wcscpy(out, PluginPathWInstance()._path);
+    wcscat(out, subpath);
 }
 
-const wchar_t *plugin::paths::GetPluginDirRelativePathW(const wchar_t *subpath) {
-    wcscpy_s(PluginPathWInstance()._temp_path, PluginPathWInstance()._path);
-    wcscat_s(PluginPathWInstance()._temp_path, subpath);
+wchar_t *plugin::paths::GetPluginDirRelativePathW(wchar_t *subpath) {
+    wcscpy(PluginPathWInstance()._temp_path, PluginPathWInstance()._path);
+    wcscat(PluginPathWInstance()._temp_path, subpath);
     return PluginPathWInstance()._temp_path;
 }
 
-const char *plugin::paths::GetDirPath(const char *substring, ePathDir dir) {
+char *plugin::paths::GetDirPath(char *substring, ePathDir dir) {
     if (dir == DirGame)
         return GetGameDirRelativePathA(substring);
     else if (dir == DirPlugin)
         return GetPluginDirRelativePathA(substring);
-    strcpy_s(PluginPathAInstance()._temp_path, substring);
+    strcpy(PluginPathAInstance()._temp_path, substring);
     return PluginPathAInstance()._temp_path;
 
 }
 
-const wchar_t *plugin::paths::GetDirPath(const wchar_t *substring, ePathDir dir) {
+wchar_t *plugin::paths::GetDirPath(wchar_t *substring, ePathDir dir) {
     if (dir == DirGame)
         return GetGameDirRelativePathW(substring);
     else if (dir == DirPlugin)
         return GetPluginDirRelativePathW(substring);
-    wcscpy_s(PluginPathWInstance()._temp_path, substring);
+    wcscpy(PluginPathWInstance()._temp_path, substring);
     return PluginPathWInstance()._temp_path;
 }
 
-const char *plugin::paths::GetPluginFileName(char *out) {
-    strcpy_s(out, MAX_PATH, PluginPathAInstance()._filename);
-    return out;
+char *plugin::paths::GetPluginFileName(char *out) {
+	return strcpy(out, PluginPathAInstance()._filename);
 }
 
-const wchar_t *plugin::paths::GetPluginFileName(wchar_t *out) {
-    wcscpy_s(out, MAX_PATH, PluginPathWInstance()._filename);
-    return out;
+wchar_t *plugin::paths::GetPluginFileName(wchar_t *out) {
+    return wcscpy(out, PluginPathWInstance()._filename);
 }
 
-const char *plugin::paths::GetPluginFileNameA() {
-    strcpy_s(PluginPathAInstance()._temp_path, PluginPathAInstance()._filename);
+char *plugin::paths::GetPluginFileNameA() {
+    strcpy(PluginPathAInstance()._temp_path, PluginPathAInstance()._filename);
     return PluginPathAInstance()._temp_path;
 }
 
-const wchar_t *plugin::paths::GetPluginFileNameW() {
-    wcscpy_s(PluginPathWInstance()._temp_path, PluginPathWInstance()._filename);
+wchar_t *plugin::paths::GetPluginFileNameW() {
+    wcscpy(PluginPathWInstance()._temp_path, PluginPathWInstance()._filename);
     return PluginPathWInstance()._temp_path;
 }

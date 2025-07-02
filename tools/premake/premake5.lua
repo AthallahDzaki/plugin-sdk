@@ -1,12 +1,12 @@
 require "codeblocks"
 newoption {
-    trigger     = "pluginsdkdir",
-    description = "Plugin-SDK directory (optional)"
+   trigger     = "pluginsdkdir",
+   description = "Plugin-SDK directory (optional)"
 }
 
 newoption {
-    trigger     = "winxp",
-    description = "Windows XP support (optional)"
+   trigger     = "winxp",
+   description = "Windows XP support (optional)"
 }
 
 sdkdir = _OPTIONS["pluginsdkdir"]
@@ -20,34 +20,23 @@ end
 mingw = _ACTION == "codeblocks"
 msbuild = not mingw
 
--- new plugin project generation
-newaction { trigger = "newplugin", description = "Generate new ASI plugin project" }
-newoption { trigger = "name", description = "Plugin project name. Used with newplugin"}
-newoption { trigger = "dir", description = "Project directory. Used with newplugin"}
-newoption { trigger = "gta2", description = "Adds GTA2 configuration to project. Used with newplugin" }
-newoption { trigger = "gta3", description = "Adds GTA III configuration to project. Used with newplugin" }
-newoption { trigger = "gtavc", description = "Adds GTA Vice City configuration to project. Used with newplugin" }
-newoption { trigger = "gtasa", description = "Adds GTA San Andreas configuration to project. Used with newplugin" }
-newoption { trigger = "gta4", description = "Adds GTA IV configuration to project. Used with newplugin" }
-
-
 function deleteAllFoldersWithName(pathToDir, folderName)
-    os.execute("for /d /r \"" .. pathToDir .. "\" %d in (" .. folderName .. ") do @if exist \"%d\" rd /s/q \"%d\" >nul 2>&1")
+    os.execute("for /d /r \"" .. pathToDir .. "\" %d in (" .. folderName .. ") do @if exist \"%d\" rd /s/q \"%d\" 2>NUL")
 end
 
 function cleanProjectsDirectory(pathToDir)
-    os.execute("del /s \"" .. pathToDir .. "\\*.sln\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.suo\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.sdf\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.opensdf\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.filters\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.user\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.workspace\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.cbp\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.project\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.depend\" >nul 2>&1")
-    os.execute("del /s \"" .. pathToDir .. "\\*.layout\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.sln\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.suo\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.sdf\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.opensdf\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.filters\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.user\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.workspace\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.cbp\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.project\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.depend\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.layout\" 2>NUL")
     deleteAllFoldersWithName(pathToDir, "obj")
 end
 
@@ -74,7 +63,7 @@ function projectDefinition(name, value, l1, l2)
 end
 
 function directX9Installed()
-    return true
+	return true
 end
 
 function splitString(line, sep)
@@ -123,44 +112,42 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
     project (projectName)
     language "C++"
 
-    if projectName:sub(-#"_unreal") == "_unreal" then
-        architecture "x64"
-        defines "_WIN64"
-    else
-        architecture "x32"
-    end
+	if projectName:sub(-#"_unreal") == "_unreal" then
+		architecture "x64"
+		defines "_WIN64"
+	else
+		architecture "x32"
+	end
     characterset "MBCS"
-    staticruntime "On"
-
+    staticruntime "On"	
+	
     local projectPath = (sdkdir .. "\\" .. projectName)
-
+    
     if msbuild then
         if winxp then
             defines "_USING_V110_SDK71_"
             buildoptions { "/Zc:threadSafeInit-" }
-            cppdialect "C++17"
-        else
-            cppdialect "C++latest"
+			cppdialect "C++17"
+		else	
+			cppdialect "C++latest"
         end
-        defines { "_CRT_NON_CONFORMING_SWPRINTFS", "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" }
+        defines { "_CRT_SECURE_NO_WARNINGS", "_CRT_NON_CONFORMING_SWPRINTFS", "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" }
         buildoptions { "/sdl-" }
-        flags "MultiProcessorCompile"
-        disablewarnings "4073" -- "initializers put in library initialization area"
-        fatalwarnings "4996" -- "This function or variable may be unsafe. Consider using *_s"
+        disablewarnings "4073"
     end
     if mingw then
         buildoptions "-fpermissive"
     end
-
+    
     if isPluginProject == true and directX9Installed() == true then
         if msbuild then
-            externalincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
+            sysincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
         else
             includedirs "$(PLUGIN_SDK_DIR)\\shared\\dxsdk"
         end
         defines "_DX9_SDK_INSTALLED"
     end
-
+    
     --TODO: add all game versions when it will be possible
     if isPluginProject == true then
         if projectName == "plugin_sa" then
@@ -169,24 +156,25 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
             defines { "GTAVC", "PLUGIN_SGV_10EN", "RW" }
         elseif projectName == "plugin_iii" then
             defines { "GTA3", "PLUGIN_SGV_10EN", "RW" }
-        elseif projectName == "plugin_ii" then
+		elseif projectName == "plugin_ii" then
             defines { "GTA2", "PLUGIN_SGV_96EN", "GBH" }
-            defines "_CRT_SECURE_NO_WARNINGS" --TODO: instead warning 4966 should be suppressed for files in game_II\d3d
-        elseif projectName == "plugin_iv" then
+		elseif projectName == "plugin_iv" then
             defines { "GTAIV", "PLUGIN_SGV_CE", "RAGE" }
-
-        elseif projectName == "plugin_sa_unreal" then
+			
+		elseif projectName == "plugin_sa_unreal" then
             defines { "GTASA_UNREAL", "PLUGIN_UNREAL", "UNREAL", "NOASM", "RWINT32FROMFLOAT" }
-        elseif projectName == "plugin_vc_unreal" then
+		elseif projectName == "plugin_vc_unreal" then
             defines { "GTAVC_UNREAL", "PLUGIN_UNREAL", "UNREAL", "NOASM", "RWINT32FROMFLOAT" }
-        elseif projectName == "plugin_iii_unreal" then
-            defines { "GTA3_UNREAL", "PLUGIN_UNREAL", "UNREAL", "NOASM", "RWINT32FROMFLOAT" }
+		elseif projectName == "plugin_iii_unreal" then
+            defines { "GTA3_UNREAL", "PLUGIN_UNREAL", "UNREAL", "NOASM", "RWINT32FROMFLOAT" }	
         end
     end
-
+    
     filter "Release"
         optimize "On"
-        linktimeoptimization "On"
+        if msbuild then
+            flags "LinkTimeOptimization"
+        end
         symbols "Off"
     filter "zDebug"
         symbols "On"
@@ -213,57 +201,57 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
         filter {}
         targetextension ".lib"
     end
-
+    
     setToolset()
     kind "StaticLib"
     filter "zDebug"
         symbols "On"
     filter {}
-
+    
     if isPluginProject == true then
-        os.execute('if not exist "' .. projectPath .. '" (mkdir "' .. projectPath .. '")')
+        os.execute("mkdir \"" .. projectPath .. "\"")
         location (projectPath)
-
         includedirs {
             ("$(PLUGIN_SDK_DIR)\\" .. projectName),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName .. "\\rw"),
-            "$(PLUGIN_SDK_DIR)\\safetyhook",
             "$(PLUGIN_SDK_DIR)\\shared",
             "$(PLUGIN_SDK_DIR)\\shared\\game"
         }
-
-        -- shared files
-        files {
+		
+		files {
             (projectPath .. "\\**.h"),
             (projectPath .. "\\**.cpp"),
             (sdkdir .. "\\shared\\**.h"),
             (sdkdir .. "\\shared\\**.cpp"),
-            (sdkdir .. "\\shared\\**.rc"),
-            (sdkdir .. "\\hooking\\**.cpp"),
-            (sdkdir .. "\\hooking\\**.h"),
-            (sdkdir .. "\\injector\\**.hpp"),
-            (sdkdir .. "\\safetyhook\\**.cpp"),
-            (sdkdir .. "\\safetyhook\\**.hpp"),
-            (sdkdir .. "\\safetyhook\\**.c"),
+			(sdkdir .. "\\shared\\**.rc"),
+			(sdkdir .. "\\hooking\\**.cpp"),
+			(sdkdir .. "\\hooking\\**.h"),
+			(sdkdir .. "\\injector\\**.hpp"),
+			(sdkdir .. "\\safetyhook\\**.cpp"),
+			(sdkdir .. "\\safetyhook\\**.hpp"),
+			(sdkdir .. "\\safetyhook\\**.c"),
         }
-
-        -- game files
+		
+		includedirs {
+			(sdkdir .. "\\safetyhook"),
+		}
+        
         vpaths {
             ["shared/*"] = (projectFile(sdkdir, "shared\\**.*")),
 
             [(gameName .. "/Animation")] = { (gameFile(projectPath, gameName, "Anim*.*")),
                                              (gameFile(projectPath, gameName, "CAnim*.*")) },
-
+                                             
             [(gameName .. "/Audio")] =     { (gameFile(projectPath, gameName, "CAE*.*")) },
-
+            
             [(gameName .. "/Collision")] = { (gameFile(projectPath, gameName, "CCol*.*")),
                                              (gameFile(projectPath, gameName, "CBox.*")),
                                              (gameFile(projectPath, gameName, "CLines.*")),
                                              (gameFile(projectPath, gameName, "CSphere.*")),
                                              (gameFile(projectPath, gameName, "tColSurface.*")),
                                              (gameFile(projectPath, gameName, "CBoundingBox.*")) },
-
+                                             
             [(gameName .. "/Core")] =      { (gameFile(projectPath, gameName, "CKeyGen.*")),
                                              (gameFile(projectPath, gameName, "CLink.*")),
                                              (gameFile(projectPath, gameName, "CLinkList.*")),
@@ -283,14 +271,14 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "List_c.*")),
                                              (gameFile(projectPath, gameName, "ListItem_c.*")),
                                              (gameFile(projectPath, gameName, "SArray.*")) },
-
+                                             
             [(gameName .. "/Entity")] =    { (gameFile(projectPath, gameName, "CEntity.*")),
                                              (gameFile(projectPath, gameName, "CBuilding.*")),
                                              (gameFile(projectPath, gameName, "CPhysical.*")),
                                              (gameFile(projectPath, gameName, "CPlaceable.*")),
                                              (gameFile(projectPath, gameName, "CTreadable.*")),
                                              (gameFile(projectPath, gameName, "CAnimatedBuilding.*")) },
-
+                                             
             [(gameName .. "/Entity/Dummy")] = { (gameFile(projectPath, gameName, "CDummy.*")),
                                              (gameFile(projectPath, gameName, "CDummyObject.*")),
                                              (gameFile(projectPath, gameName, "CDummyPed.*")) },
@@ -300,13 +288,13 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "CHandObject.*")),
                                              (gameFile(projectPath, gameName, "CProjectile.*")),
                                              (gameFile(projectPath, gameName, "CCutsceneHead.*")) },
-
+                                             
             [(gameName .. "/Entity/Ped")] = { (gameFile(projectPath, gameName, "CPed.*")),
                                              (gameFile(projectPath, gameName, "CCivilianPed.*")),
                                              (gameFile(projectPath, gameName, "CCopPed.*")),
                                              (gameFile(projectPath, gameName, "CEmergencyPed.*")),
                                              (gameFile(projectPath, gameName, "CPlayerPed.*")) },
-
+                                             
             [(gameName .. "/Entity/Vehicle")] = { (gameFile(projectPath, gameName, "CVehicle.*")),
                                              (gameFile(projectPath, gameName, "CAutomobile.*")),
                                              (gameFile(projectPath, gameName, "CBike.*")),
@@ -318,41 +306,39 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "CQuadBike.*")),
                                              (gameFile(projectPath, gameName, "CTrailer.*")),
                                              (gameFile(projectPath, gameName, "CTrain.*")) },
-
+                                             
             [(gameName .. "/Enums")] =     { (gameFile(projectPath, gameName, "e*.*")),
                                              (gameFile(projectPath, gameName, "tParticleType.*")) },
-
+                                             
             [(gameName .. "/Fx")] =        { (gameFile(projectPath, gameName, "Fx*.*")) },
-
+                                            
             [(gameName .. "/Models")] =    { (gameFile(projectPath, gameName, "*ModelInfo.*")) },
-
+            
             [(gameName .. "/Plugins")] =   { (gameFile(projectPath, gameName, "JPegCompress.*")),
                                              (gameFile(projectPath, gameName, "NodeName.*")),
                                              (gameFile(projectPath, gameName, "PipelinePlugin.*")) },
-
+                                             
             [(gameName .. "/RenderWare")] = { (gameFile(projectPath, gameName, "RenderWare.*")),
                                              (gameFile(projectPath, gameName, "D3D*.*")) },
-
-            [(gameName .. "/RenderWare/rw")] = (gameFile(projectPath, gameName, "rw/*.*")),
-
+                                             
+            [(gameName .. "/RenderWare/rw")] = (gameFile(projectPath, gameName, "rw/*.*")),                                 
+                                             
             [(gameName .. "/Scripts")] =   { (gameFile(projectPath, gameName, "CRunningScript.*")),
                                              (gameFile(projectPath, gameName, "CTheScripts.*")) },
-
+                                             
             [(gameName .. "/Tasks/TaskTypes")] = { (gameFileTaskAtoZ(projectPath, gameName, "CTaskSimple")),
                                              (gameFileTaskAtoZ(projectPath, gameName, "CTaskComplex")),
                                              (gameFile(projectPath, gameName, "CTaskGang*.*")),
                                              (gameFile(projectPath, gameName, "CTaskGoTo*.*")),
                                              (gameFile(projectPath, gameName, "CTaskInterior*.*")),
                                              (gameFile(projectPath, gameName, "CTaskLean*.*")) },
-
+                                             
             [(gameName .. "/Tasks")] =     { (gameFile(projectPath, gameName, "CTask.*")),
                                              (gameFile(projectPath, gameName, "CTaskComplex.*")),
                                              (gameFile(projectPath, gameName, "CTaskManager.*")),
                                              (gameFile(projectPath, gameName, "CTaskSimple.*")),
                                              (gameFile(projectPath, gameName, "CTaskTimer.*")) }
         }
-
-        -- plugin_[game].h
         if _ACTION == "codeblocks" then
             vpaths {
                 ["plugin"] = (projectFile(projectPath, "plugin*.h")),
@@ -386,8 +372,9 @@ function getExamplePluginDefines(projName, game, projectType, laSupport, d3dSupp
             aryDefines[counter] = "_USING_V110_SDK71_"
             counter = counter + 1
         end
-        aryDefines[counter] = "_CRT_NON_CONFORMING_SWPRINTFS"
-        counter = counter + 1
+        aryDefines[counter] = "_CRT_SECURE_NO_WARNINGS"
+        aryDefines[counter + 1] = "_CRT_NON_CONFORMING_SWPRINTFS"
+        counter = counter + 2
     end
     aryDefines[counter] = game
     aryDefines[counter + 1] = projectDefinition("GTAGAME_NAME", gameName, l1, l2)
@@ -411,20 +398,17 @@ function getExamplePluginDefines(projName, game, projectType, laSupport, d3dSupp
     end
     if game == "GTASA" then
         aryDefines[counter] = "PLUGIN_SGV_10US"
-        aryDefines[counter + 1] = "RW"
-        counter = counter + 2
+        counter = counter + 1
     elseif game == "GTAVC" then
         aryDefines[counter] = "PLUGIN_SGV_10EN"
-        aryDefines[counter + 1] = "RW"
-        counter = counter + 2
+        counter = counter + 1
     elseif game == "GTA3" then
         aryDefines[counter] = "PLUGIN_SGV_10EN"
-        aryDefines[counter + 1] = "RW"
-        counter = counter + 2
+        counter = counter + 1
     elseif game == "GTA2" then
         aryDefines[counter] = "PLUGIN_SGV_96EN"
         counter = counter + 1
-    elseif game == "GTAIV" then
+	elseif game == "GTAIV" then
         aryDefines[counter] = "PLUGIN_SGV_CE"
         counter = counter + 1
     end
@@ -445,10 +429,9 @@ function getExamplePluginIncludeFolders(pluginDir, gameDir, projectType, cleoDir
     end
     aryDirs[counter] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir)
     aryDirs[counter + 1] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir)
-    aryDirs[counter + 2] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir .. "\\rw")
-    aryDirs[counter + 3] = "$(PLUGIN_SDK_DIR)\\shared"
-    aryDirs[counter + 4] = "$(PLUGIN_SDK_DIR)\\shared\\game"
-    counter = counter + 5
+    aryDirs[counter + 2] = "$(PLUGIN_SDK_DIR)\\shared"
+    aryDirs[counter + 3] = "$(PLUGIN_SDK_DIR)\\shared\\game"
+    counter = counter + 4
     if projectType == "MOON" then
         aryDirs[counter] = "$(MOONLOADER_SDK_SA_DIR)\\src"
         aryDirs[counter + 1] = "$(MOONLOADER_SDK_SA_DIR)\\src\\libs\\lua"
@@ -532,65 +515,57 @@ function getExamplePluginLibraries(pluginLibName, projectType, cleoLibName, uses
     return aryLibs
 end
 
-function setupDebugger(gameAbbr, gameExeName)
-    postbuildcommands { "\
-if defined GTA_" .. gameAbbr .. "_DIR ( \r\n\
-taskkill /IM " .. gameExeName .. " /F /FI \"STATUS eq RUNNING\" \r\n\
-xcopy /Y \"$(TargetPath)\" \"$(GTA_" .. gameAbbr .. "_DIR)\" \r\n\
-)" }
-
-    debugcommand ("$(GTA_" .. gameAbbr .. "_DIR)\\" .. gameExeName)
-    debugdir ("$(GTA_" .. gameAbbr .. "_DIR)")
-end
-
-function pluginSdkExampleProject(projectDir, projectName, projectType, game2, game3, gameVc, gameSa, game4, d3dSupport, laSupport, additionalIncludeDirs, additionalLibraryDirs, additionalLibraries, additionalDefinitions)
+function pluginSdkExampleProject(projectName, projectType, gameSa, gameVc, game3, d3dSupport, laSupport, additionalIncludeDirs, additionalLibraryDirs, additionalLibraries, additionalDefinitions)
+    workspace (projectName)
+    local projDir = (sdkdir .. "\\examples\\" .. projectName)
+    location (projDir)
+    configurations { "Release", "zDebug" }
     local supportedGames = {}
     local gameCounter = 1
-    if game2 == true then
-        supportedGames[gameCounter] = "GTA2"
-        gameCounter = gameCounter + 1
-    end
-    if game3 == true then
-        supportedGames[gameCounter] = "GTA3"
+    if gameSa == true then
+        supportedGames[gameCounter] = "GTASA"
         gameCounter = gameCounter + 1
     end
     if gameVc == true then
         supportedGames[gameCounter] = "GTAVC"
         gameCounter = gameCounter + 1
     end
-    if gameSa == true then
-        supportedGames[gameCounter] = "GTASA"
+    if game3 == true then
+        supportedGames[gameCounter] = "GTA3"
         gameCounter = gameCounter + 1
     end
-    if game4 == true then
-        supportedGames[gameCounter] = "GTA4"
+	if game2 == true then
+        supportedGames[gameCounter] = "GTA2"
         gameCounter = gameCounter + 1
     end
-
-    workspace (projectName)
-    location (projectDir)
+	if gameIv == true then
+        supportedGames[gameCounter] = "GTAIV"
+        gameCounter = gameCounter + 1
+    end
     platforms (supportedGames)
-    configurations { "Release", "Debug" }
     project (projectName)
+    location (projDir)
     language "C++"
     architecture "x32"
     characterset ("MBCS")
     staticruntime "On"
     flags { "NoImportLib" }
-    cppdialect "C++latest"
+	cppdialect "C++latest"
+	defines { "_CRT_SECURE_NO_WARNINGS" }
 
     if msbuild then
         if winxp then
             buildoptions { "/Zc:threadSafeInit-" }
         end
         buildoptions { "/sdl-" }
-        flags "MultiProcessorCompile"
     end
     if mingw then
         buildoptions "-fpermissive"
         linkoptions { "-static-libgcc", "-static-libstdc++" }
     end
-
+    local strTargetDir = "$(PLUGIN_SDK_DIR)\\output\\examples\\"
+    targetdir (strTargetDir)
+    local strMingwObjDir = ("$(PLUGIN_SDK_DIR)\\output\\mingw\\obj\\examples\\$(ProjectName)\\")
     local ext = ".asi"
     if projectType == "CLEO" then
         ext = ".cleo"
@@ -598,12 +573,23 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
         ext = ".dll"
     end
     targetextension (ext)
-
     filter "Release"
+        if mingw then
+            objdir (strMingwObjDir .. "Release\\")
+        else
+            objdir ("!$(PLUGIN_SDK_DIR)\\output\\obj\\examples\\$(ProjectName)\\Release\\")
+        end
         optimize "On"
         symbols "Off"
-        linktimeoptimization "On"
-    filter "Debug"
+        if msbuild then
+            flags "LinkTimeOptimization"
+        end
+    filter "zDebug"
+        if mingw then
+            objdir (strMingwObjDir .. "Debug\\")
+        else
+            objdir ("!$(PLUGIN_SDK_DIR)\\output\\obj\\examples\\$(ProjectName)\\Debug\\")
+        end
         symbols "On"
     filter {}
 
@@ -612,12 +598,48 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
 
     if d3dSupport == true then
         if msbuild then
-           externalincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
+           sysincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
            syslibdirs { "$(LibraryPath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
         end
     end
-
-    if game2 == true then
+	
+    if gameSa == true then
+        filter "platforms:GTASA"
+            includedirs (getExamplePluginIncludeFolders("plugin_sa", "game_sa", projectType, "$(CLEO_SDK_SA_DIR)", false, additionalIncludeDirs, d3dSupport))
+            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_SA_DIR)", false, additionalLibraryDirs, d3dSupport))
+            defines (getExamplePluginDefines(projectName, "GTASA", projectType, laSupport, d3dSupport, additionalDefinitions, "San Andreas", "SA", "sa", "CJ", "San Andreas"))
+        filter { "Release", "platforms:GTASA" }
+            links (getExamplePluginLibraries("plugin", projectType, "cleo", d3dSupport, false, additionalLibraries, false))
+            targetname (projectName .. ".SA")
+        filter { "zDebug", "platforms:GTASA" }
+            links (getExamplePluginLibraries("plugin", projectType, "cleo", d3dSupport, false, additionalLibraries, true))
+            targetname (projectName .. ".SA_d")
+    end
+    if gameVc == true then
+        filter "platforms:GTAVC"
+            includedirs (getExamplePluginIncludeFolders("plugin_vc", "game_vc", projectType, "$(CLEO_SDK_VC_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
+            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_VC_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
+            defines (getExamplePluginDefines(projectName, "GTAVC", projectType, laSupport, d3dSupport, additionalDefinitions, "Vice City", "VC", "vc", "Tommy", "Vice City"))
+        filter { "Release", "platforms:GTAVC" }
+            links (getExamplePluginLibraries("plugin_vc", projectType, "VC.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
+            targetname (projectName .. ".VC")
+        filter { "zDebug", "platforms:GTAVC" }
+            links (getExamplePluginLibraries("plugin_vc", projectType, "VC.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
+            targetname (projectName .. ".VC_d")
+    end
+    if game3 == true then
+        filter "platforms:GTA3"
+            includedirs (getExamplePluginIncludeFolders("plugin_iii", "game_iii", projectType, "$(CLEO_SDK_III_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
+            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_III_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
+            defines (getExamplePluginDefines(projectName, "GTA3", projectType, laSupport, d3dSupport, additionalDefinitions, "3", "3", "3", "Claude", "Liberty City"))
+        filter { "Release", "platforms:GTA3" }
+            links (getExamplePluginLibraries("plugin_iii", projectType, "III.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
+            targetname (projectName .. ".III")
+        filter { "zDebug", "platforms:GTA3" }
+            links (getExamplePluginLibraries("plugin_iii", projectType, "III.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
+            targetname (projectName .. ".III_d")
+    end
+	if game2 == true then
         filter "platforms:GTA2"
             includedirs (getExamplePluginIncludeFolders("plugin_ii", "game_ii", projectType, "$(CLEO_SDK_II_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
             libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_II_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
@@ -625,250 +647,92 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
         filter { "Release", "platforms:GTA2" }
             links (getExamplePluginLibraries("plugin_ii", projectType, "II.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
             targetname (projectName .. ".II")
-        filter { "Debug", "platforms:GTA2" }
+        filter { "zDebug", "platforms:GTA2" }
             links (getExamplePluginLibraries("plugin_ii", projectType, "II.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
-            targetname (projectName .. ".II")
+            targetname (projectName .. ".II_d")
     end
-    if game3 == true then
-        filter "platforms:GTA3"
-            includedirs (getExamplePluginIncludeFolders("plugin_iii", "game_iii", projectType, "$(CLEO_SDK_III_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
-            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_III_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
-            defines (getExamplePluginDefines(projectName, "GTA3", projectType, laSupport, d3dSupport, additionalDefinitions, "3", "3", "3", "Claude", "Liberty City"))
-            setupDebugger("III", "gta3.exe")
-        filter { "Release", "platforms:GTA3" }
-            links (getExamplePluginLibraries("plugin_iii", projectType, "III.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
-            targetname (projectName .. ".III")
-        filter { "Debug", "platforms:GTA3" }
-            links (getExamplePluginLibraries("plugin_iii", projectType, "III.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
-            targetname (projectName .. ".III")
-    end
-    if gameVc == true then
-        filter "platforms:GTAVC"
-            includedirs (getExamplePluginIncludeFolders("plugin_vc", "game_vc", projectType, "$(CLEO_SDK_VC_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
-            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_VC_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
-            defines (getExamplePluginDefines(projectName, "GTAVC", projectType, laSupport, d3dSupport, additionalDefinitions, "Vice City", "VC", "vc", "Tommy", "Vice City"))
-            setupDebugger("VC", "gta-vc.exe")
-        filter { "Release", "platforms:GTAVC" }
-            links (getExamplePluginLibraries("plugin_vc", projectType, "VC.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
-            targetname (projectName .. ".VC")
-        filter { "Debug", "platforms:GTAVC" }
-            links (getExamplePluginLibraries("plugin_vc", projectType, "VC.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
-            targetname (projectName .. ".VC")
-    end
-    if gameSa == true then
-        filter "platforms:GTASA"
-            includedirs (getExamplePluginIncludeFolders("plugin_sa", "game_sa", projectType, "$(CLEO_SDK_SA_DIR)", false, additionalIncludeDirs, d3dSupport))
-            libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_SA_DIR)", false, additionalLibraryDirs, d3dSupport))
-            defines (getExamplePluginDefines(projectName, "GTASA", projectType, laSupport, d3dSupport, additionalDefinitions, "San Andreas", "SA", "sa", "CJ", "San Andreas"))
-            setupDebugger("SA", "gta_sa.exe")
-        filter { "Release", "platforms:GTASA" }
-            links (getExamplePluginLibraries("plugin", projectType, "cleo", d3dSupport, false, additionalLibraries, false))
-            targetname (projectName .. ".SA")
-        filter { "Debug", "platforms:GTASA" }
-            links (getExamplePluginLibraries("plugin", projectType, "cleo", d3dSupport, false, additionalLibraries, true))
-            targetname (projectName .. ".SA")
-    end
-    if game4 == true then
-        filter "platforms:GTA4"
+	if gameIv == true then
+        filter "platforms:GTAIV"
             includedirs (getExamplePluginIncludeFolders("plugin_iv", "game_iv", projectType, "$(CLEO_SDK_IV_DIR)", d3dSupport, additionalIncludeDirs, d3dSupport))
             libdirs (getExamplePluginLibraryFolders(projectType, "$(CLEO_SDK_IV_DIR)", d3dSupport, additionalLibraryDirs, d3dSupport))
             defines (getExamplePluginDefines(projectName, "GTAIV", projectType, laSupport, d3dSupport, additionalDefinitions, "4", "4", "4", "Niko", "Liberty City"))
-        filter { "Release", "platforms:GTA4" }
+        filter { "Release", "platforms:GTAIV" }
             links (getExamplePluginLibraries("plugin_iv", projectType, "IV.CLEO", d3dSupport, d3dSupport, additionalLibraries, false))
             targetname (projectName .. ".IV")
-        filter { "Debug", "platforms:GTA4" }
+        filter { "zDebug", "platforms:GTAIV" }
             links (getExamplePluginLibraries("plugin_iv", projectType, "IV.CLEO", d3dSupport, d3dSupport, additionalLibraries, true))
-            targetname (projectName .. ".IV")
+            targetname (projectName .. ".IV_d")
     end
     filter {}
 
     files {
-        (projectDir .. "\\**.h"),
-        (projectDir .. "\\**.cpp"),
-        (projectDir .. "\\source\\**.h"),
-        (projectDir .. "\\source\\**.cpp"),
-        (projectDir .. "\\*.md")
+        (projDir .. "\\**.h"),
+        (projDir .. "\\**.cpp"),
+        (projDir .. "\\*.md")
     }
     vpaths {
-        ["Source/*"] = { (projectDir .. "\\**.h"),
-                         (projectDir .. "\\**.cpp"),
-                         (projectDir .. "\\source\\**.h"),
-                         (projectDir .. "\\source\\**.cpp") }
+        ["Source/*"] = { (projDir .. "\\**.h"),
+                         (projDir .. "\\**.cpp") }
     }
 end
 
-function generateNewPluginSource(projectDir, projectName, projectType, game2, game3, gameVc, gameSa, game4)
-    isTrilogy = false -- any of 3/VC/SA
-    if game3 == true or gameVc == true or gameSa == true then isTrilogy = true end
-
-    platformCount = 0
-    if game2 == true then platformCount = platformCount + 1 end
-    if game3 == true or gameVc == true then platformCount = platformCount + 1 end -- 3 and VC are almost identical
-    if gameSa == true then platformCount = platformCount + 1 end
-    if game4 == true then platformCount = platformCount + 1 end
-
-    projectDir = path.normalize(projectDir)
-    sourceDir = path.join(projectDir, "source")
-    os.execute('if not exist "' .. sourceDir .. '" (mkdir "' .. sourceDir .. '")')
-
-    -- generate Main.cpp
-    main = io.open(path.join(sourceDir, "Main.cpp"), 'w')
-
-    -- includes
-    main:write([[#include <plugin.h>]], '\n')
-    if isTrilogy == true then main:write([[#include <CMessages.h>]], '\n') end
-
-    main:write([[
-
-using namespace plugin;
-
-struct Main
-{
-    size_t m_frame = 0; // render frame counter
-
-    Main()
-    {
-        // register event callbacks
-        Events::gameProcessEvent += []{ gInstance.OnGameProcess(); };
-    }
-
-    void OnGameProcess()
-    {
-        m_frame++;
-]])
-
-    -- separator line
-    if game3 == true or gameVc == true or gameSa == true then
-        main:write('\n')
-    end
-
-    -- message printing 3 and VC
-    if game3 == true or gameVc == true then
-        if platformCount > 1 then
-            main:write([[    #if defined(GTA3) or defined(GTAVC)]], '\n')
-        end
-
-        main:write([[
-        static wchar_t msg[255];
-        swprintf_s(msg, L"Hello world! Frame %d", m_frame);
-        CMessages::AddMessageJumpQ(msg, 500, 0);]], '\n')
-
-        if platformCount > 1 then
-            main:write([[    #endif]], '\n')
-        end
-    end
-
-    -- message printing SA
-    if gameSa == true then
-        if platformCount > 1 then
-            main:write([[    #if defined(GTASA)]], '\n')
-        end
-
-        main:write([[
-        static char msg[255];
-        sprintf_s(msg, "Hello world! Frame %d", m_frame);
-        CMessages::AddMessageJumpQ(msg, 500, 0, false);]], '\n')
-
-        if platformCount > 1 then
-            main:write([[    #endif]], '\n')
-        end
-    end
-
-main:write([[    }
-} gInstance;]], '\n')
-
-    main:close()
-end
-
-
--- execute
 if sdkdir == nil or sdkdir == "" then
     print("\nERROR!\nCan't locate plugin-sdk directory\n")
 else
-    if _ACTION == "newplugin" then
-        _ACTION = "vs2022"
-        generateNewPluginSource(_OPTIONS["dir"], _OPTIONS["name"], "ASI",
-            _OPTIONS["gta2"] ~= nil,
-            _OPTIONS["gta3"] ~= nil,
-            _OPTIONS["gtavc"] ~= nil,
-            _OPTIONS["gtasa"] ~= nil,
-            _OPTIONS["gta4"] ~= nil)
-        pluginSdkExampleProject(_OPTIONS["dir"], _OPTIONS["name"], "ASI",
-            _OPTIONS["gta2"] ~= nil,
-            _OPTIONS["gta3"] ~= nil,
-            _OPTIONS["gtavc"] ~= nil,
-            _OPTIONS["gtasa"] ~= nil,
-            _OPTIONS["gta4"] ~= nil,
-            false, false,
-            "", "", "", "")
-    else
-        print("Deleting temporary files...")
-        cleanProjectsDirectory(sdkdir .. "\\examples")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_sa")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_vc")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_iii")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_ii")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_iv")
+    print("Deleting temporary files...")
+    cleanProjectsDirectory(sdkdir .. "\\examples")
+    cleanProjectsDirectory(sdkdir .. "\\plugin_sa")
+    cleanProjectsDirectory(sdkdir .. "\\plugin_vc")
+    cleanProjectsDirectory(sdkdir .. "\\plugin_iii")
+	cleanProjectsDirectory(sdkdir .. "\\plugin_ii")
+	cleanProjectsDirectory(sdkdir .. "\\plugin_iv")
+	
+	cleanProjectsDirectory(sdkdir .. "\\plugin_sa_unreal")
+	cleanProjectsDirectory(sdkdir .. "\\plugin_vc_unreal")
+	cleanProjectsDirectory(sdkdir .. "\\plugin_iii_unreal")
 
-        cleanProjectsDirectory(sdkdir .. "\\plugin_sa_unreal")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_vc_unreal")
-        cleanProjectsDirectory(sdkdir .. "\\plugin_iii_unreal")
+    os.remove(sdkdir .. "\\plugin.sln")
+    os.remove(sdkdir .. "\\plugin.suo")
+    os.remove(sdkdir .. "\\plugin.sdf")
+    os.remove(sdkdir .. "\\plugin.workspace")
+    os.remove(sdkdir .. "\\plugin.workspace.layout")
+    deleteAllFoldersWithName(sdkdir, ".vs")
+    print("Done")
+    
+    if _ACTION ~= "clean" then
+    
+        workspace "plugin"
+            location (sdkdir)
+            configurations { "Release", "zDebug" }
+        
+        group ""
+            pluginSdkStaticLibProject("plugin_sa", sdkdir, "plugin", true, "game_sa")
+            pluginSdkStaticLibProject("plugin_vc", sdkdir, "plugin_vc", true, "game_vc")
+            pluginSdkStaticLibProject("plugin_iii", sdkdir, "plugin_iii", true, "game_III")
+			pluginSdkStaticLibProject("plugin_ii", sdkdir, "plugin_ii", true, "game_II")
+			pluginSdkStaticLibProject("plugin_iv", sdkdir, "plugin_iv", true, "game_IV")
+			
+			pluginSdkStaticLibProject("plugin_sa_unreal", sdkdir, "plugin_unreal", true, "game_sa_unreal")
+			pluginSdkStaticLibProject("plugin_vc_unreal", sdkdir, "plugin_vc_unreal", true, "game_vc_unreal")
+			pluginSdkStaticLibProject("plugin_iii_unreal", sdkdir, "plugin_iii_unreal", true, "game_iii_unreal")
 
-        os.remove(sdkdir .. "\\plugin.sln")
-        os.remove(sdkdir .. "\\plugin.suo")
-        os.remove(sdkdir .. "\\plugin.sdf")
-        os.remove(sdkdir .. "\\plugin.workspace")
-        os.remove(sdkdir .. "\\plugin.workspace.layout")
-        deleteAllFoldersWithName(sdkdir, ".vs")
-
-        if _ACTION ~= "clean" then
-
-            workspace "plugin"
-                location (sdkdir)
-                configurations { "Release", "zDebug" }
-
-            group ""
-                pluginSdkStaticLibProject("plugin_sa", sdkdir, "plugin", true, "game_sa")
-                pluginSdkStaticLibProject("plugin_vc", sdkdir, "plugin_vc", true, "game_vc")
-                pluginSdkStaticLibProject("plugin_iii", sdkdir, "plugin_iii", true, "game_III")
-                pluginSdkStaticLibProject("plugin_ii", sdkdir, "plugin_ii", true, "game_II")
-                pluginSdkStaticLibProject("plugin_iv", sdkdir, "plugin_iv", true, "game_IV")
-
-                pluginSdkStaticLibProject("plugin_sa_unreal", sdkdir, "plugin_unreal", true, "game_sa_unreal")
-                pluginSdkStaticLibProject("plugin_vc_unreal", sdkdir, "plugin_vc_unreal", true, "game_vc_unreal")
-                pluginSdkStaticLibProject("plugin_iii_unreal", sdkdir, "plugin_iii_unreal", true, "game_iii_unreal")
-
-            local f = io.open(sdkdir .. "\\examples\\examples.csv", "rb")
-            if f then
-                f:close()
-                local firstLine = true
-                for line in io.lines(sdkdir .. "\\examples\\examples.csv") do
-                    if firstLine ~= true then
-                        if line ~= "" then
-                            local params = splitString(line, ",")
-                            local i = 1
-                            for str in (line .. ","):gmatch("([^,]*),") do
-                                params[i] = str
-                                i = i + 1
-                            end
-                            if i - 1 ~= 13 then
-                                print("ERROR! Invalid declaration of project \"" .. params[1] .. "\" in examples.csv. Expected 13 params, found " .. (i-1))
-                            end
-
-                            local projDir = (sdkdir .. "\\examples\\" .. params[1])
-                            pluginSdkExampleProject(projDir, params[1], params[2],
-                                params[3] == "GTA2",
-                                params[4] == "GTA3",
-                                params[5] == "GTAVC",
-                                params[6] == "GTASA",
-                                params[7] == "GTA4",
-                                params[8] == "D3D",
-                                params[9] == "LA",
-                                params[10], params[11], params[12], params[13])
+        local f = io.open(sdkdir .. "\\examples\\examples.csv", "rb")
+        if f then
+            f:close()
+            local firstLine = true
+            for line in io.lines(sdkdir .. "\\examples\\examples.csv") do 
+                if firstLine ~= true then
+                    if line ~= "" then
+                        local params = splitString(line, ",")
+                        local i = 1
+                        for str in (line .. ","):gmatch("([^,]*),") do
+                            params[i] = str
+                            i = i + 1
                         end
-                    else
-                        firstLine = false
+                        pluginSdkExampleProject(params[1], params[2], params[3] == "GTASA", params[4] == "GTAVC", params[5] == "GTA3", params[6] == "D3D", params[7] == "LA", params[8], params[9], params[10], params[11])
                     end
+                else
+                    firstLine = false
                 end
             end
         end

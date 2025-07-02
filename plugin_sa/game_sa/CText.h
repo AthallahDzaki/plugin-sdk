@@ -100,7 +100,7 @@ public:
 	~CText();
 
 	// Returns text pointer by GXT key
-	SUPPORTED_10US_10EU_11EU_SR2 const char* Get(const char* key);
+	char *__thiscall Get(const char *key);
 
 	// Reads MPACK tag
 	static void __stdcall readTag(char *buf, FILE *file, int *pFileOffset, bool dontRead);
@@ -123,5 +123,3 @@ public:
 VALIDATE_SIZE(CText, 0xA90);
 
 extern PLUGIN_API CText& TheText;
-
-#include "meta/meta.CText.h"

@@ -6,8 +6,6 @@
 */
 #pragma once
 #include "PluginBase.h"
-
-#define DIRECTINPUT_VERSION 0x0800
 #include "dinput.h"
 
 enum e_ControllerAction {
