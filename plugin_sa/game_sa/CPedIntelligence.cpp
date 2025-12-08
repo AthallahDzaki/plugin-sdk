@@ -6,9 +6,11 @@
 */
 #include "CPedIntelligence.h"
 
+using namespace plugin;
+
 // Converted from thiscall void CPedIntelligence::SetPedDecisionMakerType(int newtype) 0x600B50 
-void CPedIntelligence::SetPedDecisionMakerType(int newtype) {
-	plugin::CallMethod<0x600B50, CPedIntelligence *, int>(this, newtype);
+void CPedIntelligence::SetPedDecisionMakerType(eDecisionMakerType dm) {
+	plugin::CallMethod<0x600B50, CPedIntelligence *, eDecisionMakerType>(this, dm);
 }
 
 // Converted from thiscall void CPedIntelligence::SetPedDecisionMakerTypeInGroup(int newtype) 0x600BB0 
