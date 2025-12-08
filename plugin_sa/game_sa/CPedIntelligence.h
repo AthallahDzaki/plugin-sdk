@@ -59,7 +59,7 @@ public:
     char gap_27C[12];
     class CEntity *m_apInterestingEntities[3];
     
-	void SetPedDecisionMakerType(int newtype);
+	void SetPedDecisionMakerType(eDecisionMakerType dm);
 	void SetPedDecisionMakerTypeInGroup(int newtype);
 	void RestorePedDecisionMakerType();
 	void SetHearingRange(float range);
