@@ -10,8 +10,8 @@
 
 struct DecisionContext
 {
-    bool onFoot;
-    bool inVehicle;
+    bool onFoot = false;
+    bool inVehicle = false;
 
     DecisionContext() = default;
     DecisionContext(bool onFoot, bool inVehicle) : 
@@ -25,10 +25,10 @@ struct DecisionChances
     // weights that sums up to total value of all responses applicable to current event,
     // then chance is weight/total
 
-    unsigned char toNeutral;
-    unsigned char toPlayer;
-    unsigned char toFriend;
-    unsigned char toEnemy;
+    unsigned char toNeutral = 0;
+    unsigned char toPlayer = 0;
+    unsigned char toFriend = 0;
+    unsigned char toEnemy = 0;
 
     DecisionChances() = default;
     DecisionChances(unsigned char toNeutral, unsigned char toPlayer, unsigned char toFriend, unsigned char toEnemy) :
