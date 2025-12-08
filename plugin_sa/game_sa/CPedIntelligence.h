@@ -23,6 +23,7 @@
 #include "CTaskSimpleClimb.h"
 #include "CTaskSimpleJetpack.h"
 #include "CTaskSimpleInAir.h"
+#include "CDecisionMakerTypes.h"
 
 class PLUGIN_API CPedIntelligence {
 public:
@@ -30,7 +31,7 @@ public:
     CTaskManager   m_TaskMgr;
     CEventHandler  m_eventHandler;
     CEventGroup    m_eventGroup;
-    unsigned int   m_nDecisionMakerType;
+    eDecisionMakerType   m_nDecisionMakerType;
     unsigned int   m_nDecisionMakerTypeInGroup;
     float          m_fHearingRange;
     float          m_fSeeingRange;
