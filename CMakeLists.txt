@@ -3,9 +3,9 @@ project(plugin-sdk)
 
 set (CMAKE_CXX_STANDARD 23)
 
-option(PSDK_BUILD_VC ON)
-option(PSDK_BUILD_III ON)
-option(PSDK_BUILD_SA ON)
+option(PSDK_BUILD_VC OFF)
+option(PSDK_BUILD_III OFF)
+option(PSDK_BUILD_SA OFF)
 
 if (PSDK_BUILD_III)
   add_subdirectory (plugin_III)
