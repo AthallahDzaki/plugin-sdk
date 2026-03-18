@@ -12,4 +12,8 @@ class CRenderer {
 public:
 	static int& ms_nNoOfVisibleEntities;
 	static CEntity** ms_aVisibleEntityPtrs;
+	static float& ms_lodDistScale;
+
+public:
+	static void ConstructRenderList();
 };

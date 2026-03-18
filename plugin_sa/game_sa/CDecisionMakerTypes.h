@@ -56,7 +56,7 @@ public:
     eDecisionMakerType AddDecisionMaker(CDecisionMaker* templateDm, eDecisionMakerType dm = eDecisionMakerType::UNKNOWN, bool bDecisionMakerForMission = false);
     void RemoveDecisionMaker(eDecisionMakerType dm);
 
-    void AddEventResponse(eDecisionMakerType dm, eEventType eventType, eTaskType taskId, DecisionChances responseChances, DecisionContext responseContext);
+    void AddEventResponse(eDecisionMakerType dm, eEventType eventType, eTaskType taskId, DecisionChances chances, DecisionContext context);
     void FlushDecisionMakerEventResponse(eDecisionMakerType dm, eEventType eventId);
 
     eTaskType MakeDecision(CPedGroup* pedGroup, eEventType eventType, int eventSourceType, bool bIsPedInVehicle, eTaskType taskId1, eTaskType taskId2, eTaskType taskId3, eTaskType taskId4);

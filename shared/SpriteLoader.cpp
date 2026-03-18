@@ -174,7 +174,31 @@ make_slot:
             return tex;
         }
 
-        return nullptr;
+        memcpy(pixels, p, w * h * 4);
+        RwRasterUnlock(raster);
+
+        tex = RwTextureCreate(raster);
+        RwTextureSetFilterMode(tex, rwFILTERLINEAR);
+
+        RwTextureSetMipmapping(mipMap);
+        RwTextureSetAutoMipmapping(mipMap);
+
+        memset(tex->name, 0, 32);
+        fileNoExt.copy(tex->name, 32);
+
+        img->Release();
+
+        memUsed += w * h * 4;
+#else
+        tex = rage::grcTextureFactoryPC::GetInstance()->CreateFromFile(file.c_str(), nullptr);
+
+        memUsed += tex->m_Width, tex->m_Height * 4;
+#endif
+
+        spritesMap.insert({ fileNoExt, tex });
+        spritesMapIndex.insert({ Index++, tex });
+
+        return tex;
     }
 
     bool SpriteLoader::LoadAllSpritesFromFolder(std::string const& path) {
@@ -190,7 +214,7 @@ make_slot:
 #endif
 
     CSprite2d SpriteLoader::GetSprite(std::string const& name) {
-        CSprite2d sprite;
+        CSprite2d sprite = {};
         auto s = spritesMap.find(name);
         if (s != spritesMap.end())
             sprite.m_pTexture = s->second;
@@ -199,7 +223,7 @@ make_slot:
     }
 
     CSprite2d SpriteLoader::GetSprite(uint32_t id) {
-        CSprite2d sprite;
+        CSprite2d sprite = {};
 
         auto s = spritesMapIndex.find(id);
         if (s != spritesMapIndex.end())
@@ -219,7 +243,7 @@ make_slot:
         mipMap = on;
     }
 
-    void SpriteLoader::SetExtension(std::string ext) {
+    void SpriteLoader::SetExtension(std::string const& ext) {
         extension = ext;
     }
 }

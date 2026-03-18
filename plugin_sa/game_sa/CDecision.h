@@ -24,7 +24,6 @@ struct DecisionChances
 {
     // weights that sums up to total value of all responses applicable to current event,
     // then chance is weight/total
-
     unsigned char toNeutral = 0;
     unsigned char toPlayer = 0;
     unsigned char toFriend = 0;
@@ -41,7 +40,7 @@ class PLUGIN_API CDecision {
 public:
     constexpr static auto RESPONSE_COUNT = 6; // max count of unique responses
 
-    eTaskType tasks[RESPONSE_COUNT]; // response's task
+    eTaskType task[RESPONSE_COUNT]; // response's task
     DecisionChances chances[RESPONSE_COUNT]; // response's chances for each relationship type
     DecisionContext context[RESPONSE_COUNT]; // situations the response applies to
 

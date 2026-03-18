@@ -1,5 +1,5 @@
 /*
-    Plugin-SDK (Grand Theft Auto San Andreas) header file
+    Plugin-SDK (Grand Theft Auto San Andreas) source file
     Authors: GTA Community. See more here
     https://github.com/DK22Pac/plugin-sdk
     Do not delete this comment block. Respect others' work!
@@ -18,14 +18,14 @@ void CDecisionMakerTypes::RemoveDecisionMaker(eDecisionMakerType dm) {
     return plugin::Call<0x6043A0>(dm);
 }
 
-void CDecisionMakerTypes::AddEventResponse(eDecisionMakerType dm, eEventType eventType, eTaskType taskId, DecisionChances responseChances, DecisionContext responseContext) {
-    float chances[4]; // internally converted back to byte
-    chances[0] = responseChances.toNeutral;
-    chances[1] = responseChances.toPlayer;
-    chances[2] = responseChances.toFriend;
-    chances[3] = responseChances.toEnemy;
+void CDecisionMakerTypes::AddEventResponse(eDecisionMakerType dm, eEventType eventType, eTaskType taskId, DecisionChances chances, DecisionContext context) {
+    float chancesF[4]; // internally converted back to byte
+    chancesF[0] = chances.toNeutral;
+    chancesF[1] = chances.toPlayer;
+    chancesF[2] = chances.toFriend;
+    chancesF[3] = chances.toEnemy;
 
-    plugin::CallMethod<0x6044C0, CDecisionMakerTypes*, eDecisionMakerType, eEventType, eTaskType, float*, DecisionContext&>(this, dm, eventType, taskId, chances, responseContext);
+    plugin::CallMethod<0x6044C0, CDecisionMakerTypes*, eDecisionMakerType, eEventType, eTaskType, float*, DecisionContext&>(this, dm, eventType, taskId, chancesF, context);
 }
 
 void CDecisionMakerTypes::FlushDecisionMakerEventResponse(eDecisionMakerType dm, eEventType eventId) {

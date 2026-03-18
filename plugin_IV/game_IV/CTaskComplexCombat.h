@@ -6,7 +6,11 @@
 */
 #pragma once
 #include "PluginBase.h"
-#include "Rage.h"
+#include "CTaskComplex.h"
 
-using CVector = rage::Vector3;
-using CVector2D = rage::Vector2;
+class CPed;
+
+class CTaskComplexCombat : public CTaskComplex {
+public:
+    CTaskComplexCombat(CPed* target, int32_t unk);
+};

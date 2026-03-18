@@ -59,7 +59,8 @@ namespace plugin {
         CSprite2d GetSprite(uint32_t id);
         texClass* GetTex(std::string const& name);
         void SetMipMapOn(bool on);
-        void SetExtension(std::string ext);
+        void SetExtension(std::string const& ext);
+        uint32_t GetMemoryUsed();
     };
 }
 #endif
