@@ -26,7 +26,6 @@
 #include "CTaskSimpleClimb.h"
 #include "CTaskSimpleJetpack.h"
 #include "CTaskSimpleInAir.h"
-#include "CDecisionMakerTypes.h"
 
 class PLUGIN_API CPedIntelligence {
 public:

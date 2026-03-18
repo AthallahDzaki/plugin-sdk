@@ -17,8 +17,8 @@
 struct tAtomicVisibilityPlugin
 {
 public:
-	short          m_wModelId;
-	unsigned short m_wFlags;
+    short m_wModelId;
+    unsigned short m_wFlags;
 };
 
 class PLUGIN_API CVisibilityPlugins

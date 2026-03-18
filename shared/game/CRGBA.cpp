@@ -18,6 +18,10 @@ CRGBA::CRGBA(unsigned char red, unsigned char green, unsigned char blue, unsigne
     Set(red, green, blue, alpha);
 }
 
+CRGBA::CRGBA(CRGBA const &rhs) {
+    Set(rhs);
+}
+
 CRGBA::CRGBA(unsigned int intValue) {
     Set(intValue);
 }
@@ -28,7 +32,7 @@ CRGBA::CRGBA(RwRGBA const &rhs) {
 }
 #endif
 
-CRGBA::CRGBA() { }
+CRGBA::CRGBA() {}
 
 void CRGBA::Set(unsigned char red, unsigned char green, unsigned char blue) {
     r = red;

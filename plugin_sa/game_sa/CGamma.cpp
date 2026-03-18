@@ -6,7 +6,7 @@
 */
 #include "CGamma.h"
 
-CGamma &CGamma::gamma = *(CGamma *)0xC92134;
+CGamma &gamma = *(CGamma *)0xC92134;
 
 void CGamma::SetGamma(float arg1, char arg2)
 {

@@ -7,6 +7,7 @@
 #pragma once
 
 #include "PluginBase.h"
+#include "RenderWare.h"
 
 class PLUGIN_API CGame {
 public:

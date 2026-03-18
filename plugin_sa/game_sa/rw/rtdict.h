@@ -143,7 +143,7 @@ typedef RtDict *(RtDictStreamReadCompatibilityCallBack)(RwStream *stream);
  *
  * \return The entry on success; NULL on failure.
  */
-typedef RtDictEntryType (RtDictEntryStreamWriteCallBack)(RtDictEntryConstType entry, RwStream *stream);
+typedef const RtDictEntryType (RtDictEntryStreamWriteCallBack)(RtDictEntryConstType entry, RwStream *stream);
 
 
 /**

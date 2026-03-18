@@ -57,7 +57,7 @@ namespace plugin
 
         s.name = plugin::RemoveExtension(plugin::RemovePath(file));
         s.sample = samples.size();
-        s.handle = BASS_SampleLoad(FALSE, file.c_str(), 0, 0, 1, BASS_SAMPLE_MONO | BASS_SAMPLE_3D);
+        s.handle = BASS_SampleLoad(FALSE, file.c_str(), 0, 0, 32, BASS_SAMPLE_MONO | BASS_SAMPLE_3D);
         s.loopStart = loopStart;
         s.loopEnd = loopEnd;
         samples.push_back(s);
@@ -114,7 +114,11 @@ namespace plugin
         if (channel == 0)
             return;
 
-        BASS_ChannelSet3DAttributes(streams[channel].handle, BASS_3DMODE_NORMAL, min, max, 360, 360, 0.0f);
+        if (streams[channel].is3d)
+            BASS_ChannelSet3DAttributes(streams[channel].handle, BASS_3DMODE_NORMAL, min, max, 360, 0, 0.0f);
+        else
+            BASS_ChannelSet3DAttributes(streams[channel].handle, BASS_3DMODE_OFF, min, max, 360, -1, -1);
+
         BASS_Apply3D();
     }
 
@@ -126,6 +130,8 @@ namespace plugin
         BASS_3DVECTOR pos = {x, y, z};
         BASS_ChannelSet3DPosition(streams[channel].handle, &pos, NULL, NULL);
         BASS_Set3DFactors(1.0f, 1.0f, 1.0f);
+
+        BASS_Set3DPosition(&listener.pos, nullptr, &listener.forward, &listener.up);
         BASS_Apply3D();
     }
 
@@ -505,7 +511,6 @@ namespace plugin
                     {
                         SetChannelReverbFlag(channel, it->reverb);
                         SetChannel3DPosition(channel, it->pos.x, it->pos.y, it->pos.z);
-                        SetChannel3DDistances(channel, 10.0f, 1000.0f);
                     }
                     else
                     {

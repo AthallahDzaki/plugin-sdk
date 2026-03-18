@@ -49,22 +49,22 @@ end
 
 
 function deleteAllFoldersWithName(pathToDir, folderName)
-    os.execute("for /d /r \"" .. pathToDir .. "\" %d in (" .. folderName .. ") do @if exist \"%d\" rd /s/q \"%d\" 2>NUL")
+    os.execute("for /d /r \"" .. pathToDir .. "\" %d in (" .. folderName .. ") do @if exist \"%d\" rd /s/q \"%d\" >nul 2>&1")
 end
 
 function cleanProjectsDirectory(pathToDir)
-    os.execute("del /s \"" .. pathToDir .. "\\*.sln\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.suo\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.sdf\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.opensdf\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.filters\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.user\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.workspace\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.cbp\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.project\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.depend\" 2>NUL")
-    os.execute("del /s \"" .. pathToDir .. "\\*.layout\" 2>NUL")
+    os.execute("del /s \"" .. pathToDir .. "\\*.sln\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.suo\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.sdf\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.opensdf\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.filters\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.vcxproj.user\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.workspace\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.cbp\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.project\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.depend\" >nul 2>&1")
+    os.execute("del /s \"" .. pathToDir .. "\\*.layout\" >nul 2>&1")
     deleteAllFoldersWithName(pathToDir, "obj")
 end
 
@@ -141,15 +141,17 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
         architecture "x32"
     end
     characterset "MBCS"
-    staticruntime "On"	
-	
+    staticruntime "On"
+
     local projectPath = (sdkdir .. "\\" .. projectName)
-    
+
     if msbuild then
         cppdialect "C++latest"
         defines { "_CRT_NON_CONFORMING_SWPRINTFS", "_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING" }
         buildoptions { "/sdl-" }
-        disablewarnings "4073"
+        flags "MultiProcessorCompile"
+        disablewarnings "4073" -- "initializers put in library initialization area"
+        fatalwarnings "4996" -- "This function or variable may be unsafe. Consider using *_s"
     end
     if mingw then
         buildoptions "-fpermissive"
@@ -157,7 +159,7 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
 
     if isPluginProject then
         if msbuild then
-            sysincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
+            externalincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
         else
             includedirs "$(PLUGIN_SDK_DIR)\\shared\\dxsdk"
         end
@@ -184,12 +186,10 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
             defines { "GTASA_UNREAL", "PLUGIN_UNREAL", "UNREAL", "NOASM", "RWINT32FROMFLOAT" }
         end
     end
-    
+
     filter "Release"
         optimize "On"
-        if msbuild then
-            flags "LinkTimeOptimization"
-        end
+        linktimeoptimization "On"
         symbols "Off"
     filter "zDebug"
         symbols "On"
@@ -217,7 +217,7 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
         filter {}
         targetextension ".lib"
     end
-    
+
     setToolset()
     kind "StaticLib"
     filter "zDebug"
@@ -227,47 +227,47 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
     if isPluginProject then
         os.execute('if not exist "' .. projectPath .. '" (mkdir "' .. projectPath .. '")')
         location (projectPath)
+
         includedirs {
             ("$(PLUGIN_SDK_DIR)\\" .. projectName),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName .. "\\rw"),
+            "$(PLUGIN_SDK_DIR)\\safetyhook",
             "$(PLUGIN_SDK_DIR)\\shared",
             "$(PLUGIN_SDK_DIR)\\shared\\game"
         }
-		
-		files {
+
+        -- shared files
+        files {
             (projectPath .. "\\**.h"),
             (projectPath .. "\\**.cpp"),
             (sdkdir .. "\\shared\\**.h"),
             (sdkdir .. "\\shared\\**.cpp"),
-			(sdkdir .. "\\shared\\**.rc"),
-			(sdkdir .. "\\hooking\\**.cpp"),
-			(sdkdir .. "\\hooking\\**.h"),
-			(sdkdir .. "\\injector\\**.hpp"),
-			(sdkdir .. "\\safetyhook\\**.cpp"),
-			(sdkdir .. "\\safetyhook\\**.hpp"),
-			(sdkdir .. "\\safetyhook\\**.c"),
+            (sdkdir .. "\\shared\\**.rc"),
+            (sdkdir .. "\\hooking\\**.cpp"),
+            (sdkdir .. "\\hooking\\**.h"),
+            (sdkdir .. "\\injector\\**.hpp"),
+            (sdkdir .. "\\safetyhook\\**.cpp"),
+            (sdkdir .. "\\safetyhook\\**.hpp"),
+            (sdkdir .. "\\safetyhook\\**.c"),
         }
-		
-		includedirs {
-			(sdkdir .. "\\safetyhook"),
-		}
-        
+
+        -- game files
         vpaths {
             ["shared/*"] = (projectFile(sdkdir, "shared\\**.*")),
 
             [(gameName .. "/Animation")] = { (gameFile(projectPath, gameName, "Anim*.*")),
                                              (gameFile(projectPath, gameName, "CAnim*.*")) },
-                                             
+
             [(gameName .. "/Audio")] =     { (gameFile(projectPath, gameName, "CAE*.*")) },
-            
+
             [(gameName .. "/Collision")] = { (gameFile(projectPath, gameName, "CCol*.*")),
                                              (gameFile(projectPath, gameName, "CBox.*")),
                                              (gameFile(projectPath, gameName, "CLines.*")),
                                              (gameFile(projectPath, gameName, "CSphere.*")),
                                              (gameFile(projectPath, gameName, "tColSurface.*")),
                                              (gameFile(projectPath, gameName, "CBoundingBox.*")) },
-                                             
+
             [(gameName .. "/Core")] =      { (gameFile(projectPath, gameName, "CKeyGen.*")),
                                              (gameFile(projectPath, gameName, "CLink.*")),
                                              (gameFile(projectPath, gameName, "CLinkList.*")),
@@ -287,14 +287,14 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "List_c.*")),
                                              (gameFile(projectPath, gameName, "ListItem_c.*")),
                                              (gameFile(projectPath, gameName, "SArray.*")) },
-                                             
+
             [(gameName .. "/Entity")] =    { (gameFile(projectPath, gameName, "CEntity.*")),
                                              (gameFile(projectPath, gameName, "CBuilding.*")),
                                              (gameFile(projectPath, gameName, "CPhysical.*")),
                                              (gameFile(projectPath, gameName, "CPlaceable.*")),
                                              (gameFile(projectPath, gameName, "CTreadable.*")),
                                              (gameFile(projectPath, gameName, "CAnimatedBuilding.*")) },
-                                             
+
             [(gameName .. "/Entity/Dummy")] = { (gameFile(projectPath, gameName, "CDummy.*")),
                                              (gameFile(projectPath, gameName, "CDummyObject.*")),
                                              (gameFile(projectPath, gameName, "CDummyPed.*")) },
@@ -304,13 +304,13 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "CHandObject.*")),
                                              (gameFile(projectPath, gameName, "CProjectile.*")),
                                              (gameFile(projectPath, gameName, "CCutsceneHead.*")) },
-                                             
+
             [(gameName .. "/Entity/Ped")] = { (gameFile(projectPath, gameName, "CPed.*")),
                                              (gameFile(projectPath, gameName, "CCivilianPed.*")),
                                              (gameFile(projectPath, gameName, "CCopPed.*")),
                                              (gameFile(projectPath, gameName, "CEmergencyPed.*")),
                                              (gameFile(projectPath, gameName, "CPlayerPed.*")) },
-                                             
+
             [(gameName .. "/Entity/Vehicle")] = { (gameFile(projectPath, gameName, "CVehicle.*")),
                                              (gameFile(projectPath, gameName, "CAutomobile.*")),
                                              (gameFile(projectPath, gameName, "CBike.*")),
@@ -322,39 +322,41 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "CQuadBike.*")),
                                              (gameFile(projectPath, gameName, "CTrailer.*")),
                                              (gameFile(projectPath, gameName, "CTrain.*")) },
-                                             
+
             [(gameName .. "/Enums")] =     { (gameFile(projectPath, gameName, "e*.*")),
                                              (gameFile(projectPath, gameName, "tParticleType.*")) },
-                                             
+
             [(gameName .. "/Fx")] =        { (gameFile(projectPath, gameName, "Fx*.*")) },
-                                            
+
             [(gameName .. "/Models")] =    { (gameFile(projectPath, gameName, "*ModelInfo.*")) },
-            
+
             [(gameName .. "/Plugins")] =   { (gameFile(projectPath, gameName, "JPegCompress.*")),
                                              (gameFile(projectPath, gameName, "NodeName.*")),
                                              (gameFile(projectPath, gameName, "PipelinePlugin.*")) },
-                                             
+
             [(gameName .. "/RenderWare")] = { (gameFile(projectPath, gameName, "RenderWare.*")),
                                              (gameFile(projectPath, gameName, "D3D*.*")) },
-                                             
-            [(gameName .. "/RenderWare/rw")] = (gameFile(projectPath, gameName, "rw/*.*")),                                 
-                                             
+
+            [(gameName .. "/RenderWare/rw")] = (gameFile(projectPath, gameName, "rw/*.*")),
+
             [(gameName .. "/Scripts")] =   { (gameFile(projectPath, gameName, "CRunningScript.*")),
                                              (gameFile(projectPath, gameName, "CTheScripts.*")) },
-                                             
+
             [(gameName .. "/Tasks/TaskTypes")] = { (gameFileTaskAtoZ(projectPath, gameName, "CTaskSimple")),
                                              (gameFileTaskAtoZ(projectPath, gameName, "CTaskComplex")),
                                              (gameFile(projectPath, gameName, "CTaskGang*.*")),
                                              (gameFile(projectPath, gameName, "CTaskGoTo*.*")),
                                              (gameFile(projectPath, gameName, "CTaskInterior*.*")),
                                              (gameFile(projectPath, gameName, "CTaskLean*.*")) },
-                                             
+
             [(gameName .. "/Tasks")] =     { (gameFile(projectPath, gameName, "CTask.*")),
                                              (gameFile(projectPath, gameName, "CTaskComplex.*")),
                                              (gameFile(projectPath, gameName, "CTaskManager.*")),
                                              (gameFile(projectPath, gameName, "CTaskSimple.*")),
                                              (gameFile(projectPath, gameName, "CTaskTimer.*")) }
         }
+
+        -- plugin_[game].h
         if _ACTION == "codeblocks" then
             vpaths {
                 ["plugin"] = (projectFile(projectPath, "plugin*.h")),
@@ -732,25 +734,23 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
     workspace (projectName)
     location (projectDir)
     platforms (supportedGames)
+    configurations { "Release", "Debug" }
     project (projectName)
-    location (projDir)
     language "C++"
     characterset ("MBCS")
     staticruntime "On"
     flags { "NoImportLib" }
-	cppdialect "C++latest"
-	defines { "_CRT_SECURE_NO_WARNINGS" }
+    cppdialect "C++latest"
 
     if msbuild then
         buildoptions { "/sdl-" }
+        flags "MultiProcessorCompile"
     end
     if mingw then
         buildoptions "-fpermissive"
         linkoptions { "-static-libgcc", "-static-libstdc++" }
     end
-    local strTargetDir = "$(PLUGIN_SDK_DIR)\\output\\examples\\"
-    targetdir (strTargetDir)
-    local strMingwObjDir = ("$(PLUGIN_SDK_DIR)\\output\\mingw\\obj\\examples\\$(ProjectName)\\")
+
     local ext = ".asi"
     if projectType == "CLEO" then
         ext = ".cleo"
@@ -758,23 +758,12 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
         ext = ".dll"
     end
     targetextension (ext)
+
     filter "Release"
-        if mingw then
-            objdir (strMingwObjDir .. "Release\\")
-        else
-            objdir ("!$(PLUGIN_SDK_DIR)\\output\\obj\\examples\\$(ProjectName)\\Release\\")
-        end
         optimize "On"
         symbols "Off"
-        if msbuild then
-            flags "LinkTimeOptimization"
-        end
-    filter "zDebug"
-        if mingw then
-            objdir (strMingwObjDir .. "Debug\\")
-        else
-            objdir ("!$(PLUGIN_SDK_DIR)\\output\\obj\\examples\\$(ProjectName)\\Debug\\")
-        end
+        linktimeoptimization "On"
+    filter "Debug"
         symbols "On"
         defines "DEBUG"
     filter {}
@@ -784,7 +773,7 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
 
     if d3dSupport then
         if msbuild then
-           sysincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
+           externalincludedirs { "$(IncludePath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
            syslibdirs { "$(LibraryPath)", "$(PLUGIN_SDK_DIR)\\shared\\dxsdk" }
         end
     end
@@ -918,13 +907,17 @@ function pluginSdkExampleProject(projectDir, projectName, projectType, game2, ga
     end
 
     files {
-        (projDir .. "\\**.h"),
-        (projDir .. "\\**.cpp"),
-        (projDir .. "\\*.md")
+        (projectDir .. "\\**.h"),
+        (projectDir .. "\\**.cpp"),
+        (projectDir .. "\\source\\**.h"),
+        (projectDir .. "\\source\\**.cpp"),
+        (projectDir .. "\\*.md")
     }
     vpaths {
-        ["Source/*"] = { (projDir .. "\\**.h"),
-                         (projDir .. "\\**.cpp") }
+        ["Source/*"] = { (projectDir .. "\\**.h"),
+                         (projectDir .. "\\**.cpp"),
+                         (projectDir .. "\\source\\**.h"),
+                         (projectDir .. "\\source\\**.cpp") }
     }
 end
 
@@ -1181,8 +1174,6 @@ else -- plugin sdk solution
                             params[10] ~= "---", -- GTASA UNREAL
                             params[11] ~= "---") -- D3D
                     end
-                else
-                    firstLine = false
                 end
             end
         end

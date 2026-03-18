@@ -24,20 +24,13 @@ enum PLUGIN_API ePedAttractorType : unsigned int {
     ATTRACTOR_ICECREAM = 5
 };
 
-template<typename T>
-struct PedAttractorArray {
-    T* Data;
-    uint32_t Size;
-    uint32_t Capacity;
-};
-
 class PLUGIN_API CPedAttractor {
     PLUGIN_NO_DEFAULT_CONSTRUCTION_VIRTUALBASE(CPedAttractor)
 
 public:
     C2dEffect *m_p2dEffect;
-    PedAttractorArray<CPed*> vApproachingQueue;
-    PedAttractorArray<CPed*> vWaitingQueue;
+    std::vector<CPed *> vApproachingQueue;
+    std::vector<CPed *> vWaitingQueue;
     int m_nMaxPedsInAttractor;
     float m_fQueueDistance;
     float m_fTimeInWaitQueue;

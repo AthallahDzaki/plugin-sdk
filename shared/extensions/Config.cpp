@@ -271,6 +271,7 @@ void config_file::prepareData() {
             bool scanName = false;
             bool scanAfterName = false;
             bool scanValue = false;
+            bool scanAfterValue = false;
             bool isCommentLine = false;
 
             for (unsigned int i = 0; i < line.size(); i++) {
@@ -374,6 +375,7 @@ void config_file::writeData() {
                     maxStrLen = strSz;
             }
         }
+
         for (config_param_line &param : paramLines) {
             if (!param.isEmpty() && !param.comment.empty()) {
                 out << param.comment << '\n';
