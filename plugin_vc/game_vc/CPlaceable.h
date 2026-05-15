@@ -18,4 +18,7 @@ public:
     void SetHeading(float heading);
     void SetOrientation(float x, float y, float z);
     void GetOrientation(float& x, float& y, float& z);
+
+    inline CMatrix& GetMatrix() { return *this; }
 };
+VALIDATE_SIZE(CPlaceable, 0x48);

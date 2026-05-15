@@ -63,7 +63,7 @@ public:
     bool bTunnelTransition : 1;    // this model should be rendered from within and outside of the tunnel
     
     unsigned short m_nRandomSeed;
-    unsigned short m_nModelIndex;
+    short m_nModelIndex;
     CReference *m_pReferences;
     void *m_pStreamingLink;
     short m_nScanCode;
@@ -146,10 +146,24 @@ public:
     bool IsEntityOccluded();
 
     inline float GetBoundRadius() {
-        return CModelInfo::GetColModel(m_nModelIndex)->m_boundSphere.m_fRadius;
+        auto col = GetColModel();
+        return col ? col->m_boundSphere.m_fRadius : 0.0f;
     }
 };
-
+VALIDATE_OFFSET(CEntity, m_pRwObject, 0x18);
+VALIDATE_OFFSET(CEntity, m_pRwClump, 0x18);
+VALIDATE_OFFSET(CEntity, m_pRwAtomic, 0x18);
+VALIDATE_OFFSET(CEntity, m_nRandomSeed, 0x20);
+VALIDATE_OFFSET(CEntity, m_nModelIndex, 0x22);
+VALIDATE_OFFSET(CEntity, m_pReferences, 0x24);
+VALIDATE_OFFSET(CEntity, m_pStreamingLink, 0x28);
+VALIDATE_OFFSET(CEntity, m_nScanCode, 0x2C);
+VALIDATE_OFFSET(CEntity, m_nIplIndex, 0x2E);
+VALIDATE_OFFSET(CEntity, m_nAreaCode, 0x2F);
+VALIDATE_OFFSET(CEntity, m_nLodIndex, 0x30);
+VALIDATE_OFFSET(CEntity, m_pLod, 0x30);
+VALIDATE_OFFSET(CEntity, m_nNumLodChildren, 0x34);
+VALIDATE_OFFSET(CEntity, m_nNumLodChildrenRendered, 0x35);
 VALIDATE_SIZE(CEntity, 0x38);
 
 PLUGIN_API bool IsEntityPointerValid(CEntity* entity);
