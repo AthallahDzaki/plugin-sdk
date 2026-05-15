@@ -12,15 +12,17 @@
 class PLUGIN_API CTaskComplex : public CTask {
 protected:
     CTaskComplex(plugin::dummy_func_t a) : CTask(a) {}
+
 public:
+    CTask* m_pSubTask;
+
     CTaskComplex();
-	CTask *m_pSubTask;
 
-	// vtable
-	virtual void SetSubTask(CTask *subTask);
-	virtual CTask *CreateNextSubTask(class CPed *ped);//=0
-	virtual CTask *CreateFirstSubTask(class CPed *ped);//=0
-	virtual CTask *ControlSubTask(class CPed *ped);//=0
+    // vtable
+    virtual void SetSubTask(CTask* subTask);
+    virtual CTask* CreateNextSubTask(CPed* ped);
+    virtual CTask* CreateFirstSubTask(CPed* ped);
+    virtual CTask* ControlSubTask(CPed* ped);
 };
-
+VALIDATE_OFFSET(CTaskComplex, m_pSubTask, 0x8);
 VALIDATE_SIZE(CTaskComplex, 0xC);

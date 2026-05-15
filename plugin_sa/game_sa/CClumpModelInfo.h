@@ -36,9 +36,10 @@ public:
 	static RwFrame *FindFrameFromIdCB(RwFrame *frame, void *searchData);
 	static RwFrame *FillFrameArrayCB(RwFrame *frame, void *data);
 	static RwFrame *GetFrameFromId(RpClump *clump, int id);
-	static RwFrame *GetFrameFromName(RpClump *clump, char *name);
+	static RwFrame *GetFrameFromName(RpClump *clump, const char *name);
 	static void FillFrameArray(RpClump *clump, RwFrame **frames);
     void SetFrameIds(RwObjectNameIdAssocation* data);
 };
-
+VALIDATE_OFFSET(CClumpModelInfo, m_animFileName, 0x20);
+VALIDATE_OFFSET(CClumpModelInfo, m_dwAnimFileIndex, 0x20);
 VALIDATE_SIZE(CClumpModelInfo, 0x24);

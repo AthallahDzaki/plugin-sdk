@@ -16,7 +16,6 @@
     #include <map>
     #include <math.h>
     #include <memory>
-    #include <rwcore.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h> // c-string utils
@@ -30,15 +29,9 @@
     #include <vector>
     #include <windows.h>
 
-GENERATED_LIST
+#ifdef RW
+    #include <rwcore.h>
+#endif
 
-    #ifdef GTAIII
-        #include "game_iii\CVector2D.h"
-    #endif
-    #ifdef GTAVC
-        #include "game_vc\CVector2D.h"
-    #endif
-    #ifdef GTASA
-        #include "game_sa\CVector2D.h"
-    #endif
+GENERATED_LIST
 #endif

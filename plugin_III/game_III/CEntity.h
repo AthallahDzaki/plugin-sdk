@@ -134,9 +134,19 @@ public:
     }
 
     inline CColModel* GetColModel() {
-        return CModelInfo::GetModelInfo(m_nModelIndex)->m_pColModel;
+       auto mi = CModelInfo::GetModelInfo(m_nModelIndex);
+       return mi ? mi->m_pColModel : nullptr;
     }
 };
+VALIDATE_OFFSET(CEntity, m_pRwObject, 0x4C);
+VALIDATE_OFFSET(CEntity, m_pRwAtomic, 0x4C);
+VALIDATE_OFFSET(CEntity, m_pRwClump, 0x4C);
+VALIDATE_OFFSET(CEntity, m_nScanCode, 0x58);
+VALIDATE_OFFSET(CEntity, m_nRandomSeed, 0x5A);
+VALIDATE_OFFSET(CEntity, m_nModelIndex, 0x5C);
+VALIDATE_OFFSET(CEntity, m_nLevel, 0x5E);
+VALIDATE_OFFSET(CEntity, m_pFirstRef, 0x60);
+VALIDATE_SIZE(CEntity, 0x64);
 
 VTABLE_DESC(CEntity, 0x5F11A8, 17);
 VALIDATE_SIZE(CEntity, 0x64);
