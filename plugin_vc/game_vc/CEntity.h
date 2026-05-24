@@ -141,14 +141,7 @@ public:
         return pos;
     }
 
-    inline float GetHeading() {
-        float angle = atan2f(-up.x, up.y) * 57.295776f;
-        if (angle < 0.0f)
-            angle += 360.0f;
-        if (angle > 360.0f)
-            angle -= 360.0f;
-        return angle;
-    }
+    inline float GetHeading() { return GetForward().Heading(); }
 
     inline void SetPosition(float x, float y, float z) {
         this->pos.x = x;
@@ -165,14 +158,28 @@ public:
     }
 
     inline CColModel* GetColModel() {
-        return CModelInfo::GetModelInfo(m_nModelIndex)->m_pColModel;
+        auto mi = CModelInfo::GetModelInfo(m_nModelIndex);
+        return mi ? mi->m_pColModel : nullptr;
+    }
+
+    inline float GetBoundRadius() {
+        auto col = GetColModel();
+        return col ? col->m_boundSphere.m_fRadius : 0.0f;
     }
 
     CEntity() = delete;
     CEntity(const CEntity &) = delete;
     CEntity &operator=(const CEntity &) = delete;
 };
-
+VALIDATE_OFFSET(CEntity, m_pRwObject, 0x4C);
+VALIDATE_OFFSET(CEntity, m_pRwAtomic, 0x4C);
+VALIDATE_OFFSET(CEntity, m_pRwClump, 0x4C);
+VALIDATE_OFFSET(CEntity, m_nScanCode, 0x58);
+VALIDATE_OFFSET(CEntity, m_nRandomSeed, 0x5A);
+VALIDATE_OFFSET(CEntity, m_nModelIndex, 0x5C);
+VALIDATE_OFFSET(CEntity, m_nLevel, 0x5E);
+VALIDATE_OFFSET(CEntity, m_nAreaCode, 0x5F);
+VALIDATE_OFFSET(CEntity, m_pFirstRef, 0x60);
 VALIDATE_SIZE(CEntity, 0x64);
 
 RpAtomic *AtomicRemoveAnimFromSkinCB(RpAtomic* atomic, void* callbackData);

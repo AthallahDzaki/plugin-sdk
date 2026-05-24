@@ -8,15 +8,7 @@
 
 #include "PluginBase.h"
 #include "RenderWare.h"
-
-enum ModelInfoType {
-    MODEL_INFO_SIMPLE = 1,
-    MODEL_INFO_TIME = 3,
-    MODEL_INFO_WEAPON = 4,
-    MODEL_INFO_CLUMP = 5,
-    MODEL_INFO_VEHICLE = 6,
-    MODEL_INFO_PED = 7
-};
+#include "eModelInfoType.h"
 
 class C2dEffect;
 class CColModel;
@@ -25,17 +17,16 @@ class CColModel;
 class CBaseModelInfo {
 public:
     char           m_szName[21];
-    unsigned char  m_nType; // see ModelInfoType
+    eModelInfoType m_nType;
     unsigned char  m_nNum2dEffects;
     bool           m_bDoWeOwnTheColModel;
-    CColModel     *m_pColModel;
+    CColModel*     m_pColModel;
     short          m_n2dEffectIndex;
     short          m_nObjectDataIndex;
     unsigned short m_nRefCount;
     short          m_nTxdIndex;
 
     // vtable
-
     virtual ~CBaseModelInfo() {}
     void Shutdown();
     void DeleteRwObject();
@@ -47,7 +38,6 @@ public:
     int GetAnimFileIndex();
 
     //funcs
-
     void RemoveRef();
     void AddRef();
     void RemoveTexDictionaryRef();
@@ -56,12 +46,21 @@ public:
     void SetTexDictionary(char* txdName);
     void Add2dEffect(C2dEffect* effect);
     C2dEffect* Get2dEffect(int effectNumber);
-    CColModel *GetColModel();
+    CColModel* GetColModel();
+    eModelInfoType GetModelType();
 
 protected:
     CBaseModelInfo() {};
     CBaseModelInfo(const CBaseModelInfo &) {};
     CBaseModelInfo &operator=(const CBaseModelInfo &) { return *this; };
 };
-
+VALIDATE_OFFSET(CBaseModelInfo, m_szName, 0x4);
+VALIDATE_OFFSET(CBaseModelInfo, m_nType, 0x19);
+VALIDATE_OFFSET(CBaseModelInfo, m_nNum2dEffects, 0x1A);
+VALIDATE_OFFSET(CBaseModelInfo, m_bDoWeOwnTheColModel, 0x1B);
+VALIDATE_OFFSET(CBaseModelInfo, m_pColModel, 0x1C);
+VALIDATE_OFFSET(CBaseModelInfo, m_n2dEffectIndex, 0x20);
+VALIDATE_OFFSET(CBaseModelInfo, m_nObjectDataIndex, 0x22);
+VALIDATE_OFFSET(CBaseModelInfo, m_nRefCount, 0x24);
+VALIDATE_OFFSET(CBaseModelInfo, m_nTxdIndex, 0x26);
 VALIDATE_SIZE(CBaseModelInfo, 0x28);

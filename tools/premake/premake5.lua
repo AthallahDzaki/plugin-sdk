@@ -231,6 +231,7 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
         includedirs {
             ("$(PLUGIN_SDK_DIR)\\" .. projectName),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName),
+            ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName .. "\\enums"),
             ("$(PLUGIN_SDK_DIR)\\" .. projectName .. "\\" .. gameName .. "\\rw"),
             "$(PLUGIN_SDK_DIR)\\safetyhook",
             "$(PLUGIN_SDK_DIR)\\shared",
@@ -282,8 +283,6 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
                                              (gameFile(projectPath, gameName, "CQuaternion.*")),
                                              (gameFile(projectPath, gameName, "CRect.*")),
                                              (gameFile(projectPath, gameName, "CStore.*")),
-                                             (gameFile(projectPath, gameName, "CVector.*")),
-                                             (gameFile(projectPath, gameName, "CVector2D.*")),
                                              (gameFile(projectPath, gameName, "List_c.*")),
                                              (gameFile(projectPath, gameName, "ListItem_c.*")),
                                              (gameFile(projectPath, gameName, "SArray.*")) },
@@ -369,7 +368,7 @@ function pluginSdkStaticLibProject(projectName, sdkdir, outName, isPluginProject
         end
 
         -- precompiled header
-        if msbuild and (projNameLower == "plugin_iii" or projNameLower == "plugin_vc" or projNameLower == "plugin_sa") then
+        if msbuild and (projNameLower == "plugin_iii" or projNameLower == "plugin_vc" or projNameLower == "plugin_sa" or projNameLower == "plugin_iv") then
             pchheader "stdafx.h"
             forceincludes "stdafx.h"
             pchsource (path.getrelative(path.getabsolute("."), sdkdir .. "/shared/stdafx.cpp"))
@@ -492,10 +491,11 @@ function getExamplePluginIncludeFolders(pluginDir, gameDir, projectType, cleoDir
 
     aryDirs[counter] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir)
     aryDirs[counter + 1] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir)
-    aryDirs[counter + 2] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir .. "\\rw")
-    aryDirs[counter + 3] = "$(PLUGIN_SDK_DIR)\\shared"
-    aryDirs[counter + 4] = "$(PLUGIN_SDK_DIR)\\shared\\game"
-    counter = counter + 5
+    aryDirs[counter + 2] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir .. "\\enums")
+    aryDirs[counter + 3] = ("$(PLUGIN_SDK_DIR)\\" .. pluginDir .. "\\" .. gameDir .. "\\rw")
+    aryDirs[counter + 4] = "$(PLUGIN_SDK_DIR)\\shared"
+    aryDirs[counter + 5] = "$(PLUGIN_SDK_DIR)\\shared\\game"
+    counter = counter + 6
     
     if projectType == "CLEO" and cleoDir ~= "" then
         aryDirs[counter] = cleoDir
