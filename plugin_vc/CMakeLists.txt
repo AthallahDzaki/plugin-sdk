@@ -18,3 +18,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "./game_vc/")
 target_include_directories(${PROJECT_NAME} PUBLIC "../shared/")
 target_include_directories(${PROJECT_NAME} PUBLIC "../shared/game")
 target_include_directories(${PROJECT_NAME} PUBLIC "./game_vc/rw");
+target_include_directories(${PROJECT_NAME} PUBLIC "./game_vc/enums/")
